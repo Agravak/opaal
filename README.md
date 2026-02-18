@@ -12,6 +12,8 @@
 
 ![Opaal Screenshot](docs/screenshot.png)
 
+![Opaal Demo](docs/demo.gif)
+
 ## What is Opaal?
 
 Opaal is a desktop application that lets you design multi-agent workflows visually and export them as structured prompts for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) and other agentic AI launchers. Instead of writing complex orchestration prompts by hand, you drag agent cards onto a canvas, configure their roles and skills, draw connections between them, and Opaal generates the prompt automatically.
