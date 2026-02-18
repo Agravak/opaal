@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Opaal — Orchestration Prompts for Agentic AI Launch. Visual multi-agent workflow designer for Claude Code and other agentic AI platforms.",
   "main": "./out/main/index.js",
-  "author": "Opaal Contributors",
+  "author": {
+    "name": "Opaal Contributors",
+    "email": "kinan.hamwi@gmail.com"
+  },
   "license": "MIT",
   "homepage": "https://github.com/Agravak/opaal",
   "repository": {
