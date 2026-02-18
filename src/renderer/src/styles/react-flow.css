@@ -1,0 +1,167 @@
+/* React Flow theme overrides for Linear aesthetic */
+
+/* ── GPU Acceleration ── */
+.react-flow__viewport {
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.react-flow__node {
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Magnetic snap animation when node position changes after drag release */
+.react-flow__node:not(.dragging) {
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Ensure no transition during active drag — instant tracking */
+.react-flow__node.dragging {
+  transition: none !important;
+}
+
+.react-flow__edges {
+  will-change: transform;
+}
+
+/* Disable transitions during active user interaction */
+.rf-interacting .react-flow__viewport {
+  transition: none !important;
+}
+
+/* ── MiniMap ── */
+.react-flow__minimap {
+  background: var(--color-surface-secondary) !important;
+  border: 1px solid var(--color-border-subtle) !important;
+  border-radius: 10px !important;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+}
+
+.react-flow__minimap-mask {
+  fill: var(--color-surface-canvas) !important;
+  opacity: 0.6;
+}
+
+/* ── Controls ── */
+.react-flow__controls {
+  border: 1px solid var(--color-border-subtle) !important;
+  border-radius: 10px !important;
+  overflow: hidden;
+  box-shadow: var(--shadow-card) !important;
+  backdrop-filter: blur(8px);
+}
+
+.react-flow__controls-button {
+  background: var(--color-surface-elevated) !important;
+  border-bottom: 1px solid var(--color-border-subtle) !important;
+  color: var(--color-content-secondary) !important;
+  fill: var(--color-content-secondary) !important;
+  width: 28px !important;
+  height: 28px !important;
+  transition: all 0.15s ease;
+}
+
+.react-flow__controls-button:hover {
+  background: var(--color-surface-tertiary) !important;
+  color: var(--color-content-primary) !important;
+  fill: var(--color-content-primary) !important;
+}
+
+.react-flow__controls-button:last-child {
+  border-bottom: none !important;
+}
+
+/* ── Background ── */
+.react-flow__background {
+  background: var(--color-surface-canvas) !important;
+}
+
+/* ── Edges ── */
+.react-flow__edge-path {
+  transition: stroke-width 0.2s ease, filter 0.2s ease, opacity 0.2s ease;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: var(--color-accent) !important;
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 6px var(--color-accent-glow));
+}
+
+/* Edge hover glow */
+.react-flow__edge:hover .react-flow__edge-path {
+  filter: drop-shadow(0 0 4px var(--color-accent-glow));
+  stroke-width: 2.5;
+}
+
+/* ── Handles (Diamond Energy Ports) ── */
+.react-flow__handle {
+  width: 12px !important;
+  height: 12px !important;
+  border: 2px solid oklch(0.585 0.233 277.117 / 0.5) !important;
+  background: var(--color-surface-elevated) !important;
+  border-radius: 2px !important;
+  transform: rotate(45deg);
+  transition: all 0.2s ease;
+}
+
+.react-flow__handle:hover {
+  width: 14px !important;
+  height: 14px !important;
+  border-color: var(--color-accent) !important;
+  background: var(--color-accent) !important;
+  transform: rotate(45deg) scale(1.2);
+  box-shadow: 0 0 12px var(--color-accent-glow);
+}
+
+/* Remove default React Flow attribution */
+.react-flow__attribution {
+  display: none !important;
+}
+
+/* ── Pane styles ── */
+.react-flow__pane {
+  cursor: grab;
+}
+
+.react-flow__pane:active {
+  cursor: grabbing;
+}
+
+/* ── Column header nodes ── */
+.react-flow__node-columnHeader {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  pointer-events: all;
+}
+
+.react-flow__node-columnHeader .react-flow__handle {
+  display: none !important;
+}
+
+/* ── Agent card node cleanup ── */
+.react-flow__node-agentCard {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* ── Marquee Selection Box (RTS-style) ── */
+.react-flow__selection {
+  background: rgba(99, 102, 241, 0.08) !important;
+  border: 1.5px dashed var(--color-accent) !important;
+  border-radius: 2px !important;
+}
+
+/* Bounding box around selected nodes */
+.react-flow__nodesselection-rect {
+  background: rgba(99, 102, 241, 0.04) !important;
+  border: 1px solid rgba(99, 102, 241, 0.25) !important;
+  border-radius: 4px !important;
+}

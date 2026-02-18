@@ -1,0 +1,41 @@
+appId: com.opaal.app
+productName: Opaal
+copyright: Copyright (c) 2025-2026 Opaal Contributors
+
+directories:
+  buildResources: resources
+  output: dist
+
+files:
+  - "!**/.vscode/*"
+  - "!src/*"
+  - "!electron.vite.config.*"
+  - "!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml}"
+  - "!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}"
+  - "!{CONTRIBUTING.md,CODE_OF_CONDUCT.md,CHANGELOG.md}"
+
+win:
+  forceCodeSigning: false
+  target:
+    - target: portable
+      arch: [x64]
+
+mac:
+  target:
+    - target: dmg
+      arch: [x64, arm64]
+    - target: zip
+      arch: [x64, arm64]
+  category: public.app-category.developer-tools
+  hardenedRuntime: true
+
+linux:
+  target:
+    - target: AppImage
+      arch: [x64]
+    - target: deb
+      arch: [x64]
+  category: Development
+
+publish:
+  provider: github

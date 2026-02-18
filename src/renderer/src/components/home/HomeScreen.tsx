@@ -1,0 +1,249 @@
+import { useEffect, useCallback, useState } from 'react'
+import { motion } from 'framer-motion'
+import { useWorkflowStore } from '../../stores/workflow-store'
+import { useUIStore } from '../../stores/ui-store'
+import { usePersistenceStore } from '../../stores/persistence-store'
+import { useToastStore } from '../../stores/toast-store'
+import { templates } from '../../lib/templates'
+import { RecentWorkflowCard } from './RecentWorkflowCard'
+import { TemplateCard } from './TemplateCard'
+import { DropZone } from './DropZone'
+import { DraftRecoveryModal } from './DraftRecoveryModal'
+import type { Workflow } from '../../types/workflow'
+
+export function HomeScreen() {
+  const loadWorkflow = useWorkflowStore((s) => s.loadWorkflow)
+  const resetWorkflow = useWorkflowStore((s) => s.resetWorkflow)
+  const setView = useUIStore((s) => s.setView)
+  const addToast = useToastStore((s) => s.addToast)
+
+  const recentFiles = usePersistenceStore((s) => s.recentFiles)
+  const draft = usePersistenceStore((s) => s.draft)
+  const draftChecked = usePersistenceStore((s) => s.draftChecked)
+  const loadRecentFiles = usePersistenceStore((s) => s.loadRecentFiles)
+  const removeRecentFile = usePersistenceStore((s) => s.removeRecentFile)
+  const clearRecentFiles = usePersistenceStore((s) => s.clearRecentFiles)
+  const checkForDraft = usePersistenceStore((s) => s.checkForDraft)
+  const clearDraft = usePersistenceStore((s) => s.clearDraft)
+
+  const [showDraftModal, setShowDraftModal] = useState(false)
+
+  // Load recent files and check for draft on mount
+  useEffect(() => {
+    loadRecentFiles()
+    if (!draftChecked) {
+      checkForDraft()
+    }
+  }, [loadRecentFiles, checkForDraft, draftChecked])
+
+  // Show draft modal when draft is detected
+  useEffect(() => {
+    if (draftChecked && draft) {
+      setShowDraftModal(true)
+    }
+  }, [draftChecked, draft])
+
+  const handleNewBlank = useCallback(() => {
+    resetWorkflow()
+    if (window.api?.clearDraft) window.api.clearDraft()
+    setView('canvas')
+  }, [resetWorkflow, setView])
+
+  const handleLoadTemplate = useCallback((templateCreate: () => Workflow) => {
+    const wf = templateCreate()
+    loadWorkflow(wf)
+    setView('canvas')
+  }, [loadWorkflow, setView])
+
+  const handleLoadRecentFile = useCallback(async (filePath: string) => {
+    if (!window.api?.loadWorkflow) return
+    // We need to read the file via the main process
+    // For now, try loading it through the standard dialog approach
+    // Actually we need a direct file read IPC. Let's use the loadWorkflow dialog workaround
+    // by dispatching the standard load event
+    // Better: just open the file dialog with the path
+    // Actually the simplest: read the file via fetch if it's a local file, or add a new IPC
+    // For now we'll use the existing load mechanism with a toast
+    try {
+      // We don't have a direct "load file by path" IPC yet
+      // Let's trigger the standard file dialog for now
+      window.dispatchEvent(new CustomEvent('opaal:load'))
+    } catch {
+      addToast({ variant: 'error', message: 'Failed to open file' })
+    }
+  }, [addToast])
+
+  const handleRecoverDraft = useCallback(() => {
+    if (!draft) return
+    try {
+      const parsed = JSON.parse(draft.workflow) as Workflow
+      loadWorkflow(parsed)
+      clearDraft()
+      setShowDraftModal(false)
+      setView('canvas')
+      addToast({ variant: 'success', message: 'Draft recovered' })
+    } catch {
+      addToast({ variant: 'error', message: 'Failed to recover draft' })
+      setShowDraftModal(false)
+    }
+  }, [draft, loadWorkflow, clearDraft, setView, addToast])
+
+  const handleDiscardDraft = useCallback(() => {
+    clearDraft()
+    setShowDraftModal(false)
+  }, [clearDraft])
+
+  return (
+    <div className="relative flex flex-col h-full overflow-y-auto">
+      {/* Background gradient */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse at 50% 0%, var(--color-home-glow, rgba(99,102,241,0.08)) 0%, transparent 60%)',
+        }}
+      />
+
+      {/* Dot grid overlay */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-30"
+        style={{
+          backgroundImage: 'radial-gradient(circle, var(--color-canvas-dot) 1px, transparent 1px)',
+          backgroundSize: '24px 24px',
+        }}
+      />
+
+      {/* Content */}
+      <div className="relative z-10 flex flex-col items-center gap-10 px-8 py-12 max-w-[960px] mx-auto w-full">
+
+        {/* Hero Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="flex flex-col items-center gap-5 pt-8 pb-4"
+        >
+          {/* Logo */}
+          <div className="flex items-center gap-3">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L2 7L12 12L22 7L12 2Z" className="fill-accent" opacity="0.9" />
+              <path d="M2 17L12 22L22 17" className="stroke-accent" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.5" />
+              <path d="M2 12L12 17L22 12" className="stroke-accent" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.7" />
+            </svg>
+            <span className="text-[22px] font-bold tracking-tight text-content-primary">
+              Opaal
+            </span>
+          </div>
+
+          {/* Tagline */}
+          <p className="text-[13px] text-content-tertiary">
+            Design your next mission
+          </p>
+
+          {/* CTA */}
+          <motion.button
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={handleNewBlank}
+            className="flex items-center gap-2 px-6 py-2.5 rounded-[10px] text-[13px] font-semibold text-white bg-accent hover:bg-accent-hover transition-colors"
+            style={{ boxShadow: '0 0 24px rgba(99, 102, 241, 0.25)' }}
+          >
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M8 3v10M3 8h10" />
+            </svg>
+            New Blank Workflow
+          </motion.button>
+        </motion.div>
+
+        {/* Recent Missions */}
+        {recentFiles.length > 0 && (
+          <div className="w-full">
+            <div className="flex items-center justify-between mb-4">
+              <motion.h2
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.1 }}
+                className="text-[11px] font-bold uppercase tracking-[0.08em] text-content-tertiary"
+              >
+                Recent Missions
+              </motion.h2>
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.15 }}
+                onClick={clearRecentFiles}
+                className="text-[10px] text-content-tertiary/60 hover:text-content-secondary transition-colors"
+              >
+                Clear All
+              </motion.button>
+            </div>
+            <div className="flex gap-3 overflow-x-auto pb-2 -mx-2 px-2">
+              {recentFiles.map((file, i) => (
+                <RecentWorkflowCard
+                  key={file.filePath}
+                  index={i}
+                  name={file.name}
+                  filePath={file.filePath}
+                  agentCount={file.agentCount}
+                  waveCount={file.waveCount}
+                  roleColors={file.roleColors}
+                  lastOpened={file.lastOpened}
+                  onClick={() => handleLoadRecentFile(file.filePath)}
+                  onRemove={() => removeRecentFile(file.filePath)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Templates */}
+        <div className="w-full">
+          <motion.h2
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.15 }}
+            className="text-[11px] font-bold uppercase tracking-[0.08em] text-content-tertiary mb-4"
+          >
+            Mission Briefings
+          </motion.h2>
+          <div className="flex gap-3 overflow-x-auto pb-2 -mx-2 px-2">
+            {templates.map((tmpl, i) => (
+              <TemplateCard
+                key={tmpl.id}
+                template={tmpl}
+                index={i}
+                onClick={() => handleLoadTemplate(tmpl.create)}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Drop Zone */}
+        <div className="w-full">
+          <DropZone />
+        </div>
+
+        {/* Open file button */}
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.35 }}
+          onClick={() => window.dispatchEvent(new CustomEvent('opaal:load'))}
+          className="flex items-center gap-2 px-4 py-2 rounded-[8px] text-[12px] font-medium text-content-tertiary hover:text-content-secondary border border-border-subtle hover:border-border-default transition-all"
+        >
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M2 13V3a1 1 0 011-1h4l2 2h4a1 1 0 011 1v8a1 1 0 01-1 1H3a1 1 0 01-1-1z" />
+          </svg>
+          Open from file...
+        </motion.button>
+      </div>
+
+      {/* Draft Recovery Modal */}
+      <DraftRecoveryModal
+        open={showDraftModal}
+        savedAt={draft?.savedAt || ''}
+        onRecover={handleRecoverDraft}
+        onDiscard={handleDiscardDraft}
+      />
+    </div>
+  )
+}

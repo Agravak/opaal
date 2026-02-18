@@ -1,0 +1,728 @@
+@import 'tailwindcss';
+
+@theme {
+  /* ── Typography ── */
+  --font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* ── Surface Colors (Light) ── */
+  --color-surface-primary: #ffffff;
+  --color-surface-secondary: #f7f8fa;
+  --color-surface-tertiary: #eef0f4;
+  --color-surface-elevated: #ffffff;
+  --color-surface-canvas: #f9fafb;
+  --color-surface-canvas-dot: #dfe1e6;
+
+  /* ── Content Colors (Light) ── */
+  --color-content-primary: #111827;
+  --color-content-secondary: #5b6270;
+  --color-content-tertiary: #8c919c;
+  --color-content-inverse: #f0f1f3;
+
+  /* ── Border Colors (Light) ── */
+  --color-border-default: #e0e3e9;
+  --color-border-subtle: #ebedf2;
+  --color-border-strong: #c5c9d2;
+
+  /* ── Accent (Indigo) ── */
+  --color-accent: #6366f1;
+  --color-accent-hover: #5558e6;
+  --color-accent-muted: oklch(0.585 0.233 277.117 / 0.08);
+  --color-accent-glow: oklch(0.585 0.233 277.117 / 0.15);
+
+  /* ── Role Colors ── */
+  --color-role-architect: #6366f1;
+  --color-role-developer: #10b981;
+  --color-role-reviewer: #8b5cf6;
+  --color-role-tester: #f59e0b;
+  --color-role-documenter: #14b8a6;
+  --color-role-researcher: #f97316;
+  --color-role-custom: #71717a;
+
+  /* ── Radii ── */
+  --radius-card: 10px;
+  --radius-badge: 6px;
+  --radius-pill: 9999px;
+  --radius-button: 8px;
+
+  /* ── Shadows ── */
+  --shadow-card: 0 1px 3px oklch(0 0 0 / 0.06), 0 1px 2px oklch(0 0 0 / 0.04);
+  --shadow-card-hover: 0 4px 16px oklch(0 0 0 / 0.08), 0 2px 4px oklch(0 0 0 / 0.04);
+  --shadow-elevated: 0 12px 32px oklch(0 0 0 / 0.12), 0 4px 8px oklch(0 0 0 / 0.06);
+  --shadow-glow: 0 0 24px oklch(0.585 0.233 277.117 / 0.2);
+
+  /* ── Glass Effects ── */
+  --color-glass-bg: oklch(1 0 0 / 0.03);
+  --color-glass-border: oklch(1 0 0 / 0.06);
+  --blur-glass: 12px;
+
+  /* ── Home Screen ── */
+  --color-home-glow: #e8ebf7;
+
+  /* ── Animations ── */
+  --animate-fade-in: fade-in 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --animate-slide-up: slide-up 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --animate-slide-right: slide-right 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slide-up {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slide-right {
+    from { opacity: 0; transform: translateX(-6px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes breathe-glow {
+    0%, 100% { box-shadow: 0 0 16px var(--breathe-color, transparent); }
+    50% { box-shadow: 0 0 28px var(--breathe-color, transparent); }
+  }
+  @keyframes info-glow-breathe {
+    0%, 100% { filter: drop-shadow(0 0 4px var(--color-accent-glow)); }
+    50% { filter: drop-shadow(0 0 8px var(--color-accent-glow)); }
+  }
+  @keyframes drop-target-pulse {
+    0%, 100% { box-shadow: 0 0 20px var(--color-accent-glow); }
+    50% { box-shadow: 0 0 36px var(--color-accent-glow); }
+  }
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  @keyframes prompt-panel-pulse {
+    0% { opacity: 0.3; }
+    50% { opacity: 0.9; }
+    100% { opacity: 0.3; }
+  }
+  @keyframes hex-energy-pulse {
+    0%, 100% { filter: drop-shadow(0 0 4px var(--hex-glow-color, transparent)); }
+    50% { filter: drop-shadow(0 0 12px var(--hex-glow-color, transparent)); }
+  }
+  @keyframes hex-energy-pulse-intense {
+    0%, 100% { filter: drop-shadow(0 0 6px var(--hex-glow-color, transparent)); }
+    50% { filter: drop-shadow(0 0 18px var(--hex-glow-color, transparent)); }
+  }
+  @keyframes command-card-breathe {
+    0%, 100% { filter: drop-shadow(0 0 8px var(--card-glow-color, transparent)); }
+    50% { filter: drop-shadow(0 0 24px var(--card-glow-color, transparent)); }
+  }
+  @keyframes slot-pulse {
+    0%, 100% { opacity: 0.35; }
+    50% { opacity: 0.75; }
+  }
+  @keyframes energy-burst {
+    0% { transform: scale(0.3); opacity: 0.7; }
+    100% { transform: scale(2.5); opacity: 0; }
+  }
+  @keyframes skill-equip-flash {
+    0% { background-color: var(--slot-flash-color, rgba(255,255,255,0.35)); }
+    100% { background-color: transparent; }
+  }
+  @keyframes home-glow-breathe {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.7; }
+  }
+  @keyframes stat-pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+    100% { transform: scale(1); }
+  }
+  @keyframes live-pulse {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.3); }
+  }
+
+  /* ── Premium Prompt Experience ── */
+  @keyframes prompt-accent-sweep {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  @keyframes prompt-copy-ripple {
+    0% { transform: scale(0); opacity: 0.3; }
+    100% { transform: scale(2.5); opacity: 0; }
+  }
+  @keyframes prompt-copy-particle {
+    0% { transform: translate(0, 0) scale(1); opacity: 0.8; }
+    100% { transform: translate(var(--px, 30px), var(--py, -30px)) scale(0); opacity: 0; }
+  }
+  @keyframes prompt-checkmark-draw {
+    from { stroke-dashoffset: 24; }
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes prompt-ring-pulse {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(2.2); opacity: 0; }
+  }
+  @keyframes prompt-icon-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes prompt-toc-highlight {
+    from { opacity: 0; transform: scaleY(0.5); }
+    to { opacity: 1; transform: scaleY(1); }
+  }
+  @keyframes prompt-sonar {
+    0% { transform: scale(0.8); opacity: 0.6; }
+    100% { transform: scale(2); opacity: 0; }
+  }
+  @keyframes prompt-stat-flash-up {
+    0% { background-color: transparent; }
+    50% { background-color: rgba(16, 185, 129, 0.06); }
+    100% { background-color: transparent; }
+  }
+  @keyframes prompt-stat-flash-down {
+    0% { background-color: transparent; }
+    50% { background-color: rgba(245, 158, 11, 0.06); }
+    100% { background-color: transparent; }
+  }
+
+  /* ── Prompt Design Tokens ── */
+  --color-prompt-surface: #fafbfc;
+  --color-prompt-gutter: #f4f5f7;
+  --shadow-prompt-card: 0 1px 4px oklch(0 0 0 / 0.03), 0 0 1px oklch(0 0 0 / 0.06);
+  --shadow-prompt-card-hover: 0 2px 8px oklch(0 0 0 / 0.05), 0 0 1px oklch(0 0 0 / 0.08);
+}
+
+/* ── Dark Mode Overrides ── */
+.dark {
+  --color-surface-primary: #0e0e14;
+  --color-surface-secondary: #141420;
+  --color-surface-tertiary: #1a1a2a;
+  --color-surface-elevated: #1c1c2c;
+  --color-surface-canvas: #09090f;
+  --color-surface-canvas-dot: #1a1a28;
+
+  --color-content-primary: #e8e8f0;
+  --color-content-secondary: #8e8ea6;
+  --color-content-tertiary: #7a7a96;
+  --color-content-inverse: #111118;
+
+  --color-border-default: #262638;
+  --color-border-subtle: #1c1c2e;
+  --color-border-strong: #38384e;
+
+  --color-accent: #818cf8;
+  --color-accent-hover: #9ba3fb;
+  --color-accent-muted: oklch(0.7 0.17 277.117 / 0.1);
+  --color-accent-glow: oklch(0.7 0.17 277.117 / 0.18);
+
+  --shadow-card: 0 1px 3px oklch(0 0 0 / 0.2), 0 1px 2px oklch(0 0 0 / 0.12);
+  --shadow-card-hover: 0 4px 16px oklch(0 0 0 / 0.3), 0 2px 4px oklch(0 0 0 / 0.16);
+  --shadow-elevated: 0 12px 32px oklch(0 0 0 / 0.4), 0 4px 8px oklch(0 0 0 / 0.2);
+  --shadow-glow: 0 0 28px oklch(0.7 0.17 277.117 / 0.25);
+
+  --color-glass-bg: oklch(1 0 0 / 0.04);
+  --color-glass-border: oklch(1 0 0 / 0.08);
+
+  --color-home-glow: #1a1a3e;
+
+  --color-prompt-surface: #12121c;
+  --color-prompt-gutter: #0e0e16;
+  --shadow-prompt-card: 0 1px 4px oklch(0 0 0 / 0.15), 0 0 1px oklch(0 0 0 / 0.2);
+  --shadow-prompt-card-hover: 0 2px 8px oklch(0 0 0 / 0.2), 0 0 1px oklch(0 0 0 / 0.25);
+}
+
+/* ── Base ── */
+body {
+  background-color: var(--color-surface-primary);
+  color: var(--color-content-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4 { letter-spacing: -0.02em; }
+
+/* ── Window Drag Regions ── */
+.titlebar-drag { -webkit-app-region: drag; }
+.titlebar-no-drag { -webkit-app-region: no-drag; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-default);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-strong);
+}
+
+/* ── Selection ── */
+::selection {
+  background: var(--color-accent-muted);
+  color: var(--color-content-primary);
+}
+
+/* ── Drag Ghost ── */
+.skill-drag-ghost {
+  position: fixed;
+  top: -1000px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: var(--color-accent);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 9999;
+  box-shadow: 0 8px 24px oklch(0 0 0 / 0.3);
+}
+
+/* ── Breathing Glow ── */
+.breathing-glow {
+  animation: breathe-glow 2.5s ease-in-out infinite;
+}
+
+/* ── Drop Target ── */
+.drop-target-active {
+  animation: drop-target-pulse 1.2s ease-in-out infinite;
+}
+
+/* ── Shimmer Effect for New Prompt Sections ── */
+.prompt-section-new {
+  position: relative;
+  overflow: hidden;
+}
+
+.prompt-section-new::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    oklch(0.7 0.17 277.117 / 0.07) 50%,
+    transparent 100%
+  );
+  animation: shimmer 0.8s ease-out forwards;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ── Completeness Ring ── */
+.completeness-ring {
+  transform: rotate(-90deg);
+  transform-origin: center;
+}
+
+/* ── Skill Added Flash ── */
+.skill-added-overlay {
+  backdrop-filter: blur(2px);
+}
+
+/* ── Hexagonal Command Card ── */
+.hex-frame-pulse {
+  animation: hex-energy-pulse 3s ease-in-out infinite;
+}
+
+.hex-frame-pulse-intense {
+  animation: hex-energy-pulse-intense 2s ease-in-out infinite;
+}
+
+.command-card-breathe {
+  animation: command-card-breathe 2.5s ease-in-out infinite;
+}
+
+.slot-pulse-anim {
+  animation: slot-pulse 1s ease-in-out infinite;
+}
+
+.energy-burst-anim {
+  animation: energy-burst 0.5s ease-out forwards;
+  pointer-events: none;
+}
+
+.skill-equip-flash-anim {
+  animation: skill-equip-flash 0.4s ease-out forwards;
+}
+
+/* ── Legendary Skill Slot System ── */
+
+/* Diagonal shimmer sweep on hover (algorithmic light refraction) */
+@keyframes skill-slot-shimmer {
+  0% { transform: translateX(-120%) rotate(25deg); }
+  100% { transform: translateX(250%) rotate(25deg); }
+}
+
+.skill-slot-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.skill-slot-shimmer::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -60%;
+  right: -60%;
+  bottom: -60%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.08) 40%,
+    rgba(255,255,255,0.18) 50%,
+    rgba(255,255,255,0.08) 60%,
+    transparent 100%
+  );
+  transform: translateX(-120%) rotate(25deg);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.skill-slot-shimmer:hover::after {
+  opacity: 1;
+  animation: skill-slot-shimmer 0.65s ease-out;
+}
+
+/* Equip celebration: ring burst that expands outward */
+@keyframes skill-equip-ring {
+  0% { transform: scale(0.8); opacity: 0.7; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+.skill-equip-ring-anim {
+  animation: skill-equip-ring 0.5s ease-out forwards;
+  pointer-events: none;
+}
+
+/* Equipped skill idle breathing inner glow (bioluminescence) */
+@keyframes skill-slot-breathe {
+  0%, 100% { box-shadow: inset 0 0 4px var(--skill-glow, transparent); }
+  50% { box-shadow: inset 0 0 10px var(--skill-glow, transparent); }
+}
+
+.skill-slot-breathe {
+  animation: skill-slot-breathe 3s ease-in-out infinite;
+}
+
+/* Enhanced equip flash with more punch */
+@keyframes skill-equip-flash-v2 {
+  0% { background-color: var(--slot-flash-color, rgba(255,255,255,0.45)); }
+  35% { background-color: var(--slot-flash-color, rgba(255,255,255,0.15)); }
+  100% { background-color: transparent; }
+}
+
+.skill-equip-flash-v2-anim {
+  animation: skill-equip-flash-v2 0.5s ease-out forwards;
+}
+
+/* Premium drag ghost (glass-morphism card) */
+.skill-drag-ghost-premium {
+  position: fixed;
+  top: -1000px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--color-surface-elevated) 0%, var(--color-surface-tertiary) 100%);
+  border: 1px solid var(--color-border-subtle);
+  color: var(--color-content-primary);
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 9999;
+  box-shadow: 0 12px 32px oklch(0 0 0 / 0.25), 0 4px 8px oklch(0 0 0 / 0.1), 0 0 0 1px oklch(0 0 0 / 0.05);
+}
+
+/* ── Home Screen Glow ── */
+.home-glow {
+  animation: home-glow-breathe 4s ease-in-out infinite;
+}
+
+/* ── Prompt Panel ── */
+.prompt-stat-pop {
+  animation: stat-pop 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.prompt-live-dot {
+  animation: live-pulse 2s ease-in-out infinite;
+}
+
+/* ── Premium Prompt Accent Sweep ── */
+.prompt-accent-sweep {
+  background: linear-gradient(90deg,
+    var(--color-accent) 0%,
+    var(--color-accent-hover) 30%,
+    var(--color-accent) 60%,
+    oklch(0.7 0.17 277.117 / 0.4) 100%);
+  background-size: 200% 100%;
+  animation: prompt-accent-sweep 10s linear infinite;
+}
+
+/* ── Copy Celebration ── */
+.prompt-copy-ripple {
+  animation: prompt-copy-ripple 0.5s ease-out forwards;
+  pointer-events: none;
+}
+
+.prompt-copy-particle {
+  animation: prompt-copy-particle 0.4s ease-out forwards;
+  pointer-events: none;
+}
+
+.prompt-checkmark-draw {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: prompt-checkmark-draw 0.4s ease-out 0.1s forwards;
+}
+
+/* ── Live Ring Pulse ── */
+.prompt-ring-pulse {
+  animation: prompt-ring-pulse 2s ease-out infinite;
+}
+
+/* ── Icon Rotating Border ── */
+.prompt-icon-rotate {
+  animation: prompt-icon-rotate 30s linear infinite;
+}
+
+/* ── Paper Texture Overlay ── */
+.prompt-paper-texture {
+  background-image: radial-gradient(circle, rgba(0,0,0,0.015) 1px, transparent 1px);
+  background-size: 3px 3px;
+}
+
+.dark .prompt-paper-texture {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.008) 1px, transparent 1px);
+  background-size: 3px 3px;
+}
+
+/* ── TOC Active Indicator ── */
+.prompt-toc-active {
+  animation: prompt-toc-highlight 0.2s ease forwards;
+}
+
+/* ── Sonar Rings (Empty State) ── */
+.prompt-sonar-ring {
+  animation: prompt-sonar 2.5s ease-out infinite;
+  pointer-events: none;
+}
+
+/* ── Stat Direction Flash ── */
+.prompt-stat-up {
+  animation: prompt-stat-flash-up 0.4s ease;
+}
+
+.prompt-stat-down {
+  animation: prompt-stat-flash-down 0.4s ease;
+}
+
+/* ── Enhanced Shimmer for New Sections ── */
+.prompt-section-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.prompt-section-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    oklch(0.7 0.17 277.117 / 0.08) 40%,
+    oklch(0.7 0.17 277.117 / 0.12) 50%,
+    oklch(0.7 0.17 277.117 / 0.08) 60%,
+    transparent 100%
+  );
+  animation: shimmer 1.2s ease-out forwards;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ── View Full Prompt Shimmer Hover ── */
+.prompt-view-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.prompt-view-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    oklch(0.7 0.17 277.117 / 0.06) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  transition: none;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.prompt-view-btn:hover::after {
+  animation: shimmer 0.8s ease-out forwards;
+}
+
+/* ── Monaco Editor Container ── */
+.prompt-monaco-container .monaco-editor {
+  border-radius: 12px;
+}
+
+.prompt-monaco-container .monaco-editor .margin {
+  border-radius: 12px 0 0 12px;
+}
+
+/* ── Edge Loop Animation ── */
+@keyframes edge-loop-dash {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -20; }
+}
+
+.edge-loop-animated {
+  animation: edge-loop-dash 1s linear infinite;
+}
+
+/* ── Edge Approval Gate Dot Animation ── */
+@keyframes edge-approval-dot {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.9; }
+}
+
+.edge-approval-animated {
+  animation: edge-approval-dot 1.5s ease-in-out infinite;
+}
+
+/* ── Monaco Skeleton Loader ── */
+.prompt-monaco-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-tertiary) 25%,
+    var(--color-surface-secondary) 50%,
+    var(--color-surface-tertiary) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 12px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RED ALERT DEPLOYMENT SYSTEM
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Command Bar Glass ── */
+.command-bar-glass {
+  background: oklch(0.15 0 0 / 0.72);
+  backdrop-filter: blur(20px) saturate(1.3);
+  border: 1px solid oklch(1 0 0 / 0.06);
+  box-shadow: 0 -4px 32px oklch(0 0 0 / 0.2), inset 0 1px 0 oklch(1 0 0 / 0.04);
+}
+
+:root:not(.dark) .command-bar-glass {
+  background: oklch(0.97 0 0 / 0.80);
+  backdrop-filter: blur(20px) saturate(1.2);
+  border: 1px solid oklch(0 0 0 / 0.06);
+  box-shadow: 0 -4px 32px oklch(0 0 0 / 0.06), inset 0 1px 0 oklch(1 0 0 / 0.5);
+}
+
+/* ── Command Bar Active Slot Pulse ── */
+@keyframes command-bar-slot-pulse {
+  0%, 100% { box-shadow: 0 0 12px var(--slot-accent, #818cf8)20, inset 0 0 6px var(--slot-accent, #818cf8)10; }
+  50% { box-shadow: 0 0 22px var(--slot-accent, #818cf8)35, inset 0 0 10px var(--slot-accent, #818cf8)18; }
+}
+
+.command-bar-slot-active {
+  animation: command-bar-slot-pulse 1.5s ease-in-out infinite;
+}
+
+/* ── Placement Mode Cursor ── */
+.placement-cursor .react-flow__pane {
+  cursor: crosshair !important;
+}
+
+/* ── Deploy Shockwave Ring ── */
+@keyframes deploy-shockwave {
+  0% { transform: scale(0.3); opacity: 0.7; border-width: 3px; }
+  60% { opacity: 0.3; border-width: 2px; }
+  100% { transform: scale(3.5); opacity: 0; border-width: 1px; }
+}
+
+.deploy-shockwave-anim {
+  animation: deploy-shockwave 0.5s ease-out forwards;
+}
+
+/* ── Deploy Energy Particles Converge ── */
+@keyframes deploy-particle-converge {
+  0% { transform: translate(var(--px, 60px), var(--py, -60px)) scale(1.5); opacity: 0.7; }
+  80% { transform: translate(0, 0) scale(0.4); opacity: 1; }
+  100% { transform: translate(0, 0) scale(0); opacity: 0; }
+}
+
+.deploy-particle-anim {
+  animation: deploy-particle-converge 0.35s ease-in forwards;
+}
+
+/* ── Deploy Glow Burst ── */
+@keyframes deploy-glow-burst {
+  0% { transform: scale(0.4); opacity: 0; }
+  30% { opacity: 0.35; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+.deploy-glow-burst-anim {
+  opacity: 0;
+  animation: deploy-glow-burst 0.5s ease-out forwards;
+  animation-delay: 0.15s;
+}
+
+/* ── Deploy Inner Flash ── */
+@keyframes deploy-inner-flash {
+  0% { transform: scale(0); opacity: 0; }
+  20% { transform: scale(1.2); opacity: 0.8; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+.deploy-inner-flash-anim {
+  opacity: 0;
+  animation: deploy-inner-flash 0.4s ease-out forwards;
+  animation-delay: 0.1s;
+}
+
+/* ── Deploy Card Materialization Border Flash ── */
+@keyframes deploy-border-flash {
+  0% { box-shadow: 0 0 0 3px var(--deploy-accent, #818cf8)60; }
+  50% { box-shadow: 0 0 30px 6px var(--deploy-accent, #818cf8)30; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+.deploy-border-flash-anim {
+  animation: deploy-border-flash 0.5s ease-out forwards;
+  animation-delay: 0.3s;
+}
+
+/* ── Scrollbar-less overflow for command bar ── */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

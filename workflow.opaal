@@ -1,0 +1,257 @@
+{
+  "id": "6e80d460-e901-4a09-b06f-2688da3a03a4",
+  "name": "Content Research & Production",
+  "description": "Research an industry topic from multiple angles, write a comprehensive article, develop a video concept and presentation outline, then produce both the video and presentation in parallel.",
+  "version": "1.0.0",
+  "createdAt": "2026-02-17T12:40:32.850Z",
+  "updatedAt": "2026-02-17T12:46:46.889Z",
+  "columns": [
+    {
+      "id": "e231bb11-3d5a-4714-85c2-4cf5fc717462",
+      "name": "Research",
+      "order": 0
+    },
+    {
+      "id": "066d9572-70df-4ef9-80b9-fd10dae2fd0a",
+      "name": "Writing",
+      "order": 1
+    },
+    {
+      "id": "7f4817f6-83db-4591-921e-dff42c11be51",
+      "name": "Creative Direction",
+      "order": 2
+    },
+    {
+      "id": "68cb012a-c1b1-4652-87bd-3e203a9a5fe8",
+      "name": "Production",
+      "order": 3
+    }
+  ],
+  "agents": [
+    {
+      "id": "03199258-1bf7-44d2-b830-1bf61cc28760",
+      "columnId": "e231bb11-3d5a-4714-85c2-4cf5fc717462",
+      "name": "Industry Research Agent",
+      "role": "researcher",
+      "roleDescription": "Researches the target industry, analyzes scientific papers, market trends, and key developments.",
+      "skills": [],
+      "outputDefinition": "Industry research report with key findings, statistics, and notable papers",
+      "instructions": "Research the specified industry thoroughly. Look for recent scientific papers, industry reports, market data, and expert opinions. Use web search and web fetch to find authoritative sources. Summarize the most important findings with citations.",
+      "position": {
+        "x": 40,
+        "y": 80
+      },
+      "subagentType": "general-purpose",
+      "preferredModel": "sonnet",
+      "allowedTools": [
+        "read",
+        "glob",
+        "grep",
+        "web-search",
+        "web-fetch"
+      ]
+    },
+    {
+      "id": "c1ece71d-5c0a-4a87-b4c6-31fb662f14d5",
+      "columnId": "e231bb11-3d5a-4714-85c2-4cf5fc717462",
+      "name": "Social Media Research Agent",
+      "role": "researcher",
+      "roleDescription": "Researches social media trends, community discussions, and public sentiment around the topic.",
+      "skills": [],
+      "outputDefinition": "Social media and community research report with trending topics and audience insights",
+      "instructions": "Research what people are discussing on social media, forums, and community platforms about this topic. Use web search and web fetch to find trending conversations, popular opinions, pain points, and emerging themes. Identify what resonates with audiences.",
+      "position": {
+        "x": 40,
+        "y": 284
+      },
+      "subagentType": "general-purpose",
+      "preferredModel": "sonnet",
+      "allowedTools": [
+        "read",
+        "glob",
+        "grep",
+        "web-search",
+        "web-fetch"
+      ]
+    },
+    {
+      "id": "4dc4a218-ef49-449b-8fc6-dd299325b801",
+      "columnId": "066d9572-70df-4ef9-80b9-fd10dae2fd0a",
+      "name": "Content Writer",
+      "role": "blog_post_writer",
+      "roleDescription": "Writes a comprehensive, engaging article based on the research, and provides a video concept idea.",
+      "skills": [
+        {
+          "id": "detected:writing-skills",
+          "name": "writing-skills",
+          "source": "detected"
+        }
+      ],
+      "outputDefinition": "Polished article draft plus a video concept brief for accompanying visual content",
+      "instructions": "Using both research reports, write a compelling long-form article that combines industry insights with social sentiment. Make it informative yet engaging. Also include a video concept brief at the end that outlines a short video idea to accompany the article.",
+      "position": {
+        "x": 460,
+        "y": 80
+      },
+      "subagentType": "general-purpose",
+      "preferredModel": "sonnet",
+      "allowedTools": [
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    },
+    {
+      "id": "dbdc4ef3-1871-44da-be83-2284ec81b1b3",
+      "columnId": "7f4817f6-83db-4591-921e-dff42c11be51",
+      "name": "Video Director",
+      "role": "architect",
+      "roleDescription": "Takes the video concept and creates a detailed, engaging video outline and a PowerPoint presentation outline.",
+      "skills": [
+        {
+          "id": "detected:remotion-best-practices",
+          "name": "remotion-best-practices",
+          "source": "detected"
+        }
+      ],
+      "outputDefinition": "Detailed video production outline with scene-by-scene breakdown, plus a PowerPoint presentation outline",
+      "instructions": "Review the content writer's video concept brief. Expand it into a detailed, visually engaging video production outline with scene descriptions, timing, visual elements, and narration notes. Use the remotion-best-practices skill for guidance on creating effective Remotion videos. Also create a detailed outline for a PowerPoint presentation that accompanies the content.",
+      "position": {
+        "x": 880,
+        "y": 80
+      },
+      "subagentType": "general-purpose",
+      "preferredModel": "sonnet",
+      "allowedTools": [
+        "read",
+        "write",
+        "edit",
+        "glob",
+        "grep"
+      ]
+    },
+    {
+      "id": "23cf42e2-5efd-432e-8a61-665537455ccd",
+      "columnId": "68cb012a-c1b1-4652-87bd-3e203a9a5fe8",
+      "name": "Video Creator 2",
+      "role": "seo_content_optimizer",
+      "roleDescription": "Builds the actual Remotion video based on the Video Director's production outline.",
+      "skills": [
+        {
+          "id": "detected:remotion-best-practices",
+          "name": "remotion-best-practices",
+          "source": "detected"
+        },
+        {
+          "id": "detected:cambium-brand-skill",
+          "name": "cambium-brand-skill",
+          "source": "detected"
+        }
+      ],
+      "outputDefinition": "Complete Remotion video project with all code, assets, and render instructions",
+      "instructions": "Using the Video Director's production outline, create the full Remotion video project. Use the remotion-best-practices skill for framework patterns and best practices. Write clean, well-structured Remotion code with proper compositions, animations, and timing.",
+      "position": {
+        "x": 1300,
+        "y": 80
+      },
+      "subagentType": "general-purpose",
+      "preferredModel": "sonnet",
+      "allowedTools": [
+        "read",
+        "write",
+        "edit",
+        "bash",
+        "glob",
+        "grep"
+      ]
+    },
+    {
+      "id": "eb7002a8-37f8-4afb-868c-e67acdebbb5a",
+      "columnId": "68cb012a-c1b1-4652-87bd-3e203a9a5fe8",
+      "name": "Presentation Maker",
+      "role": "powerpoint_presentation_builder",
+      "roleDescription": "Creates a polished PowerPoint presentation based on the Video Director's outline.",
+      "skills": [
+        {
+          "id": "detected:pptx",
+          "name": "pptx",
+          "source": "detected"
+        },
+        {
+          "id": "detected:cambium-brand-skill",
+          "name": "cambium-brand-skill",
+          "source": "detected"
+        }
+      ],
+      "outputDefinition": "Complete PowerPoint presentation file (.pptx)",
+      "instructions": "Using the Video Director's presentation outline, create a polished, visually appealing PowerPoint presentation. Use the pptx skill to create the .pptx file. Ensure the presentation has a clear narrative flow, consistent styling, and compelling visuals.",
+      "position": {
+        "x": 1300,
+        "y": 284
+      },
+      "subagentType": "general-purpose",
+      "preferredModel": "sonnet",
+      "allowedTools": [
+        "read",
+        "write",
+        "edit",
+        "bash",
+        "glob",
+        "grep"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "0fe4ea0e-e7eb-430d-9446-42a1124282c7",
+      "sourceAgentId": "03199258-1bf7-44d2-b830-1bf61cc28760",
+      "targetAgentId": "4dc4a218-ef49-449b-8fc6-dd299325b801",
+      "type": "auto",
+      "flowType": "always"
+    },
+    {
+      "id": "d294cce1-b2dc-49c5-8529-04c58207cec3",
+      "sourceAgentId": "c1ece71d-5c0a-4a87-b4c6-31fb662f14d5",
+      "targetAgentId": "4dc4a218-ef49-449b-8fc6-dd299325b801",
+      "type": "auto",
+      "flowType": "always"
+    },
+    {
+      "id": "2f20563d-d758-4526-aff2-5f35a3238e72",
+      "sourceAgentId": "4dc4a218-ef49-449b-8fc6-dd299325b801",
+      "targetAgentId": "dbdc4ef3-1871-44da-be83-2284ec81b1b3",
+      "type": "auto",
+      "flowType": "always"
+    },
+    {
+      "id": "caaf18e9-daca-4889-bca8-42298d681e85",
+      "sourceAgentId": "dbdc4ef3-1871-44da-be83-2284ec81b1b3",
+      "targetAgentId": "23cf42e2-5efd-432e-8a61-665537455ccd",
+      "type": "auto",
+      "flowType": "always"
+    },
+    {
+      "id": "a628d140-7c4e-4de3-b2c7-fe2ed5ab4c44",
+      "sourceAgentId": "dbdc4ef3-1871-44da-be83-2284ec81b1b3",
+      "targetAgentId": "eb7002a8-37f8-4afb-868c-e67acdebbb5a",
+      "type": "auto",
+      "flowType": "always"
+    }
+  ],
+  "settings": {
+    "preamble": "",
+    "executionMode": "parallel-columns",
+    "includePermissions": true,
+    "includeDeliverables": true,
+    "nativeMode": false
+  },
+  "metadata": {
+    "viewport": {
+      "x": 0,
+      "y": 0,
+      "zoom": 1
+    }
+  }
+}

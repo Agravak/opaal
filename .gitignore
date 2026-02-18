@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+
+# Build output
+out/
+dist/
+dist-new/
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Claude Code local settings
+.claude/
+
+# Electron builder cache
+.electron-builder-cache/
+
+# Build cache
+*.tsbuildinfo
+
+# Temp files
+UserskinanAppDataLocalTempelectron-test-output.txt

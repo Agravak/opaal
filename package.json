@@ -1,0 +1,73 @@
+{
+  "name": "opaal",
+  "version": "1.0.0",
+  "description": "Opaal — Orchestration Prompts for Agentic AI Launch. Visual multi-agent workflow designer for Claude Code and other agentic AI platforms.",
+  "main": "./out/main/index.js",
+  "author": "Opaal Contributors",
+  "license": "MIT",
+  "homepage": "https://github.com/Agravak/opaal",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Agravak/opaal.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Agravak/opaal/issues"
+  },
+  "keywords": [
+    "opaal",
+    "claude",
+    "claude-code",
+    "ai-agents",
+    "multi-agent",
+    "workflow-designer",
+    "prompt-engineering",
+    "orchestration",
+    "agentic",
+    "electron",
+    "react-flow",
+    "drag-and-drop",
+    "visual-editor",
+    "anthropic",
+    "llm",
+    "ai-orchestration",
+    "prompt-generator",
+    "agentic-ai"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "start": "electron-vite preview",
+    "build:unpack": "npm run build && electron-builder --dir",
+    "build:win": "npm run build && electron-builder --win",
+    "build:mac": "npm run build && electron-builder --mac",
+    "build:linux": "npm run build && electron-builder --linux",
+    "lint": "tsc --noEmit",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "dependencies": {
+    "@monaco-editor/react": "^4.6.0",
+    "@xyflow/react": "^12.4.4",
+    "electron-store": "^10.0.0",
+    "framer-motion": "^11.15.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "uuid": "^11.1.0",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.3",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@types/uuid": "^10.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "electron": "^33.4.11",
+    "electron-builder": "^25.1.8",
+    "electron-vite": "^4.0.1",
+    "tailwindcss": "^4.1.3",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.7"
+  }
+}
