@@ -1,6 +1,9 @@
 import { ipcMain, BrowserWindow } from 'electron'
-import { scanSkills } from './skills-scanner'
+import { scanSkills, readSkillContent } from './skills-scanner'
+import { writeSkillContent, createSkillDirectory, deleteSkillDirectory, validateSkillContent } from './skill-operations'
 import { saveWorkflowDialog, loadWorkflowDialog, exportPromptDialog } from './file-operations'
+import { detectClaudeCli, launchClaudeCode, type LaunchOptions } from './claude-integration'
+import { checkSdkAvailability, runWorkflow, stopWorkflow, type RunOptions } from './claude-sdk-runner'
 import {
   getRecentFiles,
   addRecentFile,
@@ -37,6 +40,41 @@ export function registerIpcHandlers(): void {
   // Skills scanning
   ipcMain.handle('skills:scan', async () => {
     return await scanSkills()
+  })
+
+  ipcMain.handle('skills:read-content', async (_event, skillPath: string) => {
+    return await readSkillContent(skillPath)
+  })
+
+  ipcMain.handle('skills:write-content', async (_event, skillPath: string, content: string) => {
+    try {
+      await writeSkillContent(skillPath, content)
+      return { success: true }
+    } catch (error) {
+      return { success: false, error: (error as Error).message }
+    }
+  })
+
+  ipcMain.handle('skills:create-directory', async (_event, skillName: string) => {
+    try {
+      const path = await createSkillDirectory(skillName)
+      return { success: true, path }
+    } catch (error) {
+      return { success: false, error: (error as Error).message }
+    }
+  })
+
+  ipcMain.handle('skills:delete', async (_event, skillPath: string) => {
+    try {
+      await deleteSkillDirectory(skillPath)
+      return { success: true }
+    } catch (error) {
+      return { success: false, error: (error as Error).message }
+    }
+  })
+
+  ipcMain.handle('skills:validate', async (_event, content: string) => {
+    return validateSkillContent(content)
   })
 
   // File operations
@@ -147,6 +185,37 @@ export function registerIpcHandlers(): void {
 
   ipcMain.handle('persistence:clear-unified-order', () => {
     clearUnifiedOrder()
+  })
+
+  // Claude Code integration
+  ipcMain.handle('claude:detect', async () => {
+    return await detectClaudeCli()
+  })
+
+  ipcMain.handle('claude:launch', async (_event, prompt: string, options?: LaunchOptions) => {
+    return await launchClaudeCode(prompt, options)
+  })
+
+  // Claude settings
+  ipcMain.handle('claude:set-api-key', (_event, key: string) => {
+    if (key) {
+      process.env.ANTHROPIC_API_KEY = key
+    }
+  })
+
+  // Claude Agent SDK execution
+  ipcMain.handle('claude:check-sdk', async () => {
+    return await checkSdkAvailability()
+  })
+
+  ipcMain.handle('claude:run', async (event, prompt: string, options?: RunOptions) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
+    if (!win) return { success: false, error: 'No window found' }
+    return await runWorkflow(win, prompt, options)
+  })
+
+  ipcMain.handle('claude:stop', () => {
+    return stopWorkflow()
   })
 
   // App: Force close (bypasses beforeunload guard)

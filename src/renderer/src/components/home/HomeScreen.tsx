@@ -217,6 +217,40 @@ export function HomeScreen() {
           </div>
         </div>
 
+        {/* Skill Workshop */}
+        <div className="w-full">
+          <motion.h2
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="text-[11px] font-bold uppercase tracking-[0.08em] text-content-tertiary mb-4"
+          >
+            Skill Workshop
+          </motion.h2>
+          <motion.button
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25, duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+            whileHover={{ scale: 1.01, y: -2 }}
+            whileTap={{ scale: 0.99 }}
+            onClick={() => setView('workshop')}
+            className="w-full flex items-center gap-4 p-4 rounded-[10px] border border-border-subtle hover:border-accent/30 bg-surface-elevated/50 hover:bg-surface-elevated transition-all group"
+          >
+            <div className="w-10 h-10 rounded-[8px] bg-accent/8 border border-accent/15 flex items-center justify-center shrink-0 group-hover:bg-accent/12 transition-colors">
+              <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-accent">
+                <path d="M11.4 2.6a4 4 0 00-5.3 5.3L2 12l2 2 4.1-4.1a4 4 0 005.3-5.3L11 7 9 5l2.4-2.4z" />
+              </svg>
+            </div>
+            <div className="text-left">
+              <p className="text-[13px] font-semibold text-content-primary">Skill Workshop</p>
+              <p className="text-[11px] text-content-tertiary mt-0.5">Create, edit, and manage your Claude Code skills</p>
+            </div>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="text-content-tertiary ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
+              <polyline points="6 4 10 8 6 12" />
+            </svg>
+          </motion.button>
+        </div>
+
         {/* Drop Zone */}
         <div className="w-full">
           <DropZone />

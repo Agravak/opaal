@@ -30,6 +30,10 @@ Opaal is a desktop application that lets you design multi-agent workflows visual
 - **Dark & Light Themes** - Linear-inspired minimal aesthetic
 - **Save & Share** - `.opaal` files for workflow portability
 - **Export to CLAUDE.md** - One-click export for Claude Code and compatible platforms
+- **Skill Workshop** - Create, edit, validate, and manage Claude Code skills with live preview
+- **Skill Viewer** - Immersive read-only viewer for skill documentation
+- **Smart Templates** - 5 skill templates with structured scaffolding
+- **Workflow Execution** - Run workflows directly via Claude SDK integration
 - **Keyboard-Driven** - Full shortcuts, undo/redo (50 levels), multi-select, control groups
 - **Context Menus** - Right-click for quick actions on canvas and nodes
 - **Copy/Paste** - Duplicate agents with connections preserved

@@ -726,3 +726,136 @@ h1, h2, h3, h4 { letter-spacing: -0.02em; }
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* ══════════════════════════════════════════════════════════════
+   EXECUTION MODAL
+   ══════════════════════════════════════════════════════════════ */
+
+@keyframes exec-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SKILL VIEWER MARKDOWN
+   ══════════════════════════════════════════════════════════════ */
+.skill-viewer-markdown h1 { font-size: 18px; font-weight: 700; margin-bottom: 16px; margin-top: 32px; color: var(--color-content-primary); letter-spacing: -0.02em; }
+.skill-viewer-markdown h2 { font-size: 15px; font-weight: 600; margin-bottom: 12px; margin-top: 28px; color: var(--color-content-primary); letter-spacing: -0.01em; }
+.skill-viewer-markdown h3 { font-size: 13.5px; font-weight: 600; margin-bottom: 8px; margin-top: 24px; color: var(--color-content-primary); }
+.skill-viewer-markdown h4 { font-size: 12px; font-weight: 600; margin-bottom: 6px; margin-top: 20px; color: var(--color-content-primary); }
+.skill-viewer-markdown h1:first-child, .skill-viewer-markdown h2:first-child { margin-top: 0; }
+.skill-viewer-markdown p { font-size: 13px; line-height: 1.85; color: var(--color-content-secondary); margin-bottom: 14px; }
+.skill-viewer-markdown ul, .skill-viewer-markdown ol { padding-left: 24px; margin: 12px 0; }
+.skill-viewer-markdown ul { list-style-type: disc; }
+.skill-viewer-markdown ol { list-style-type: decimal; }
+.skill-viewer-markdown li { font-size: 13px; line-height: 1.75; color: var(--color-content-secondary); margin-bottom: 4px; }
+.skill-viewer-markdown li > ul, .skill-viewer-markdown li > ol { margin-top: 4px; margin-bottom: 4px; }
+.skill-viewer-markdown a { color: var(--color-accent); text-decoration: none; }
+.skill-viewer-markdown a:hover { text-decoration: underline; }
+.skill-viewer-markdown blockquote { border-left: 2px solid var(--color-accent); padding-left: 16px; margin: 16px 0; opacity: 0.85; }
+.skill-viewer-markdown blockquote p { color: var(--color-content-secondary); }
+.skill-viewer-markdown hr { border: none; border-top: 1px solid var(--color-border-subtle); margin: 24px 0; }
+.skill-viewer-markdown strong { font-weight: 600; color: var(--color-content-primary); }
+.skill-viewer-markdown em { font-style: italic; }
+
+/* Inline code */
+.skill-viewer-markdown code:not(pre code) {
+  padding: 2px 7px;
+  border-radius: 5px;
+  background: var(--color-surface-tertiary);
+  font-size: 12px;
+  font-family: var(--font-mono);
+  color: var(--color-content-primary);
+  border: 1px solid var(--color-border-subtle);
+}
+
+/* Code blocks */
+.skill-viewer-markdown pre {
+  border-radius: 10px;
+  border: 1px solid var(--color-border-subtle);
+  padding: 16px;
+  overflow-x: auto;
+  margin: 16px 0;
+  font-size: 12px;
+  line-height: 1.65;
+  font-family: var(--font-mono);
+}
+.dark .skill-viewer-markdown pre { background: #12121c; }
+.light .skill-viewer-markdown pre { background: #fafbfc; }
+
+/* Tables */
+.skill-viewer-markdown table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+.skill-viewer-markdown th {
+  text-align: left; padding: 8px 12px; font-size: 11px; font-weight: 600;
+  color: var(--color-content-tertiary); text-transform: uppercase; letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--color-border-default);
+}
+.skill-viewer-markdown td {
+  padding: 8px 12px; font-size: 12px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  color: var(--color-content-secondary);
+}
+.skill-viewer-markdown tr:hover td { background: var(--color-surface-secondary); }
+
+/* highlight.js code token colors - Dark mode */
+.dark .skill-viewer-markdown .hljs-keyword { color: #818cf8; font-weight: 600; }
+.dark .skill-viewer-markdown .hljs-string { color: #86efac; }
+.dark .skill-viewer-markdown .hljs-comment { color: #5a5a72; font-style: italic; }
+.dark .skill-viewer-markdown .hljs-type, .dark .skill-viewer-markdown .hljs-title { color: #c4b5fd; }
+.dark .skill-viewer-markdown .hljs-number { color: #f59e0b; }
+.dark .skill-viewer-markdown .hljs-variable { color: #38bdf8; }
+.dark .skill-viewer-markdown .hljs-attr { color: #f97316; }
+.dark .skill-viewer-markdown .hljs-built_in { color: #14b8a6; }
+.dark .skill-viewer-markdown .hljs-function { color: #c4b5fd; }
+.dark .skill-viewer-markdown .hljs-params { color: #e4e4ed; }
+.dark .skill-viewer-markdown pre code { color: #c8c8e0; }
+
+/* highlight.js code token colors - Light mode */
+.light .skill-viewer-markdown .hljs-keyword { color: #6366f1; font-weight: 600; }
+.light .skill-viewer-markdown .hljs-string { color: #059669; }
+.light .skill-viewer-markdown .hljs-comment { color: #b0b4bc; font-style: italic; }
+.light .skill-viewer-markdown .hljs-type, .light .skill-viewer-markdown .hljs-title { color: #7c3aed; }
+.light .skill-viewer-markdown .hljs-number { color: #d97706; }
+.light .skill-viewer-markdown .hljs-variable { color: #0284c7; }
+.light .skill-viewer-markdown .hljs-attr { color: #ea580c; }
+.light .skill-viewer-markdown .hljs-built_in { color: #0d9488; }
+.light .skill-viewer-markdown .hljs-function { color: #7c3aed; }
+.light .skill-viewer-markdown .hljs-params { color: #374151; }
+.light .skill-viewer-markdown pre code { color: #5b6270; }
+
+/* Skill viewer skeleton loading animation */
+@keyframes skill-viewer-skeleton {
+  0%, 100% { opacity: 0.12; }
+  50% { opacity: 0.45; }
+}
+.skill-viewer-skeleton-line {
+  animation: skill-viewer-skeleton 1.5s ease-in-out infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SKILL WORKSHOP
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Workshop Search Input ── */
+.workshop-search-input {
+  background: var(--color-surface-tertiary);
+  border: 1px solid var(--color-border-subtle);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.workshop-search-input:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+  outline: none;
+}
+
+/* ── Workshop Metadata Input ── */
+.workshop-metadata-input {
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 7px;
+  transition: border-color 0.15s;
+}
+.workshop-metadata-input:focus {
+  border-color: var(--color-accent);
+  outline: none;
+}

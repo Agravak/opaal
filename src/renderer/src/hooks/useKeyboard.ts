@@ -42,7 +42,12 @@ export function useKeyboard() {
     // Ctrl+S: Save (always available, including while editing text fields)
     if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 's') {
       e.preventDefault()
-      window.dispatchEvent(new CustomEvent('opaal:save'))
+      const currentView = useUIStore.getState().view
+      if (currentView === 'workshop') {
+        window.dispatchEvent(new CustomEvent('opaal:workshop-save'))
+      } else {
+        window.dispatchEvent(new CustomEvent('opaal:save'))
+      }
       return
     }
 
@@ -85,6 +90,15 @@ export function useKeyboard() {
     if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
       e.preventDefault()
       window.dispatchEvent(new CustomEvent('opaal:export'))
+      return
+    }
+
+    // Ctrl+Shift+L: Launch in Claude Code
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'l') {
+      e.preventDefault()
+      if (useUIStore.getState().claudeIntegrationEnabled) {
+        window.dispatchEvent(new CustomEvent('opaal:launch-claude'))
+      }
       return
     }
 
@@ -205,9 +219,12 @@ export function useKeyboard() {
       return
     }
 
-    // Escape: Exit placement mode first, then close popups, then deselect
+    // Escape: Exit skill viewer first, then placement mode, then close popups, then deselect
     if (e.key === 'Escape') {
       const state = useUIStore.getState()
+      if (state.skillViewerSkill) { state.closeSkillViewer(); return }
+      if (state.executionModalOpen) { state.closeExecutionModal(); return }
+      if (state.agentManagerOpen) { state.closeAgentManager(); return }
       if (state.placementMode) { state.exitPlacementMode(); return }
       if (state.promptModalOpen) { state.closePromptModal(); return }
       if (state.settingsOpen) { state.toggleSettings(); return }

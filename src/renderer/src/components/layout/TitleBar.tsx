@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from 'react'
 import { ThemeToggle } from '../shared/ThemeToggle'
 import { ShareDropdown } from '../shared/ShareDropdown'
 import { useWorkflowStore } from '../../stores/workflow-store'
+import { useWorkshopStore } from '../../stores/workshop-store'
 import { useUIStore } from '../../stores/ui-store'
 
 export function TitleBar() {
@@ -25,17 +26,23 @@ export function TitleBar() {
 
   const handleGoHome = useCallback(() => {
     if (view === 'home') return
-    const isDirty = useWorkflowStore.getState().dirty
-    if (isDirty) {
+    const isWorkflowDirty = useWorkflowStore.getState().dirty
+    const isWorkshopDirty = view === 'workshop' && useWorkshopStore.getState().isDirty()
+    if (isWorkshopDirty) {
+      const ok = window.confirm('You have unsaved skill changes. Discard them?')
+      if (!ok) return
+      useWorkshopStore.getState().reset()
+    }
+    if (isWorkflowDirty) {
       openConfirmModal('new', () => {
         useWorkflowStore.getState().resetWorkflow()
         if (window.api?.clearDraft) window.api.clearDraft()
         setView('home')
       })
-    } else {
-      useWorkflowStore.getState().resetWorkflow()
-      setView('home')
+      return
     }
+    useWorkflowStore.getState().resetWorkflow()
+    setView('home')
   }, [view, setView, openConfirmModal])
 
   const handleSave = useCallback(() => {
@@ -90,6 +97,21 @@ export function TitleBar() {
           <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M2 8.5l6-5.5 6 5.5" />
             <path d="M3.5 7.5V13a1 1 0 001 1h7a1 1 0 001-1V7.5" />
+          </svg>
+        </button>
+
+        {/* Workshop button */}
+        <button
+          onClick={() => setView('workshop')}
+          className={`w-7 h-7 rounded-[7px] flex items-center justify-center transition-all duration-150
+            ${view === 'workshop'
+              ? 'text-accent bg-accent/10'
+              : 'text-content-tertiary hover:text-content-primary hover:bg-surface-tertiary/80'
+            }`}
+          title="Skill Workshop"
+        >
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M11.4 2.6a4 4 0 00-5.3 5.3L2 12l2 2 4.1-4.1a4 4 0 005.3-5.3L11 7 9 5l2.4-2.4z" />
           </svg>
         </button>
 

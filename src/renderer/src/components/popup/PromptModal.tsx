@@ -82,6 +82,40 @@ export function PromptModal() {
     }
   }, [generated.fullText])
 
+  // Claude integration gate
+  const claudeIntegrationEnabled = useUIStore((s) => s.claudeIntegrationEnabled)
+
+  // Claude Code launch state
+  const [claudeStatus, setClaudeStatus] = useState<'idle' | 'launching' | 'launched' | 'error'>('idle')
+  const [claudeAvailable, setClaudeAvailable] = useState<boolean | null>(null)
+
+  useEffect(() => {
+    if (!claudeIntegrationEnabled) return
+    if (window.api?.detectClaudeCli) {
+      window.api.detectClaudeCli().then((info) => {
+        setClaudeAvailable(info.found)
+      })
+    }
+  }, [claudeIntegrationEnabled])
+
+  const handleLaunchClaude = useCallback(async () => {
+    if (!generated.fullText || !window.api?.launchClaudeCode) return
+    setClaudeStatus('launching')
+    try {
+      const result = await window.api.launchClaudeCode(generated.fullText)
+      if (result.success) {
+        setClaudeStatus('launched')
+        setTimeout(() => setClaudeStatus('idle'), 3000)
+      } else {
+        setClaudeStatus('error')
+        setTimeout(() => setClaudeStatus('idle'), 3000)
+      }
+    } catch {
+      setClaudeStatus('error')
+      setTimeout(() => setClaudeStatus('idle'), 3000)
+    }
+  }, [generated.fullText])
+
   const hasContent = generated.wordCount > 0
   const showToc = generated.sections.length >= 4
 
@@ -421,6 +455,60 @@ export function PromptModal() {
                         </>
                       )}
                     </motion.button>
+
+                    {/* Launch in Claude Code */}
+                    {claudeIntegrationEnabled && (
+                    <motion.button
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={handleLaunchClaude}
+                      disabled={!hasContent || claudeAvailable === false || claudeStatus === 'launching'}
+                      title={claudeAvailable === false ? 'Claude Code CLI not found' : 'Launch in Claude Code'}
+                      className={`h-[32px] px-3 rounded-button flex items-center gap-2 text-[11px] font-semibold transition-all duration-200 ${
+                        claudeStatus === 'launched'
+                          ? 'bg-emerald-500/12 text-emerald-400 border border-emerald-500/20'
+                          : claudeStatus === 'error'
+                            ? 'bg-red-500/10 text-red-400 border border-red-500/20'
+                            : !hasContent || claudeAvailable === false
+                              ? 'border border-border-subtle text-content-tertiary/40 cursor-not-allowed'
+                              : 'border border-indigo-500/20 bg-gradient-to-r from-indigo-500/8 to-violet-500/8 text-indigo-400 hover:border-violet-500/40'
+                      }`}
+                    >
+                      <AnimatePresence mode="wait">
+                        {claudeStatus === 'launched' ? (
+                          <motion.span key="launched" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.12 }} className="flex items-center gap-2">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="prompt-checkmark-draw">
+                              <polyline points="4 12 10 18 20 6" />
+                            </svg>
+                            Launched!
+                          </motion.span>
+                        ) : claudeStatus === 'error' ? (
+                          <motion.span key="error" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.12 }} className="flex items-center gap-2">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                              <path d="M18 6L6 18M6 6l12 12" />
+                            </svg>
+                            Failed
+                          </motion.span>
+                        ) : claudeStatus === 'launching' ? (
+                          <motion.span key="launching" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.12 }} className="flex items-center gap-2">
+                            <motion.svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}>
+                              <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                            </motion.svg>
+                            Launching...
+                          </motion.span>
+                        ) : (
+                          <motion.span key="idle" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.12 }} className="flex items-center gap-2">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                              <rect x="3" y="3" width="18" height="18" rx="3" />
+                              <polyline points="8 12 10 12" />
+                              <path d="M12 12h4" />
+                            </svg>
+                            Launch
+                          </motion.span>
+                        )}
+                      </AnimatePresence>
+                    </motion.button>
+                    )}
                   </div>
 
                   <button

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ROLE_META, ROLE_ACCENT, MAX_ABILITY_SLOTS, type AgentNode as AgentNodeType, categorizeSkill, getSkillAccentColor, getSkillGradient, type SkillReference } from '../../types/workflow'
 import { useWorkflowStore } from '../../stores/workflow-store'
 import { useUIStore } from '../../stores/ui-store'
+import { useSkillsStore } from '../../stores/skills-store'
 import { SkillIcon } from './SkillIcon'
 import { RoleIcon } from '../shared/RoleIcon'
 import { Tooltip } from '../shared/Tooltip'
@@ -34,7 +35,22 @@ function AbilitySlot({
   isNewlyAdded: boolean
 }) {
   const [showRingBurst, setShowRingBurst] = useState(false)
+  const openSkillViewer = useUIStore((s) => s.openSkillViewer)
+  const detectedSkills = useSkillsStore((s) => s.detectedSkills)
   const isEmpty = !skill && !isOverflow
+
+  const handleSlotClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation()
+  }, [])
+
+  const handleSlotDoubleClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (!skill) return
+    const detected = detectedSkills.find(ds => ds.name === skill.name)
+    if (detected?.path) {
+      openSkillViewer(skill.name, detected.path)
+    }
+  }, [skill, detectedSkills, openSkillViewer])
 
   // Trigger ring burst on equip
   useEffect(() => {
@@ -94,7 +110,9 @@ function AbilitySlot({
             ? { type: 'spring', stiffness: 600, damping: 20, mass: 0.6 }
             : { duration: 0.15 }
           }
-          className={`w-[34px] h-[34px] flex items-center justify-center cursor-default relative skill-slot-shimmer ${
+          onClick={handleSlotClick}
+          onDoubleClick={handleSlotDoubleClick}
+          className={`w-[34px] h-[34px] flex items-center justify-center cursor-pointer relative skill-slot-shimmer ${
             isNewlyAdded ? 'skill-equip-flash-v2-anim' : 'skill-slot-breathe'
           }`}
           style={{

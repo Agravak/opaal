@@ -1,4 +1,4 @@
-import { readdir, readFile, stat } from 'fs/promises'
+import { readdir, readFile } from 'fs/promises'
 import { join } from 'path'
 import { homedir } from 'os'
 
@@ -58,4 +58,22 @@ export async function scanSkills(): Promise<DetectedSkill[]> {
   }
 
   return skills
+}
+
+/** Read the full SKILL.md content for a given skill path */
+export async function readSkillContent(skillPath: string): Promise<string | null> {
+  const allowedDirs = [
+    join(homedir(), '.claude', 'skills'),
+    join(homedir(), '.claude', 'settings', 'skills')
+  ]
+  const resolved = join(skillPath, 'SKILL.md')
+  const isAllowed = allowedDirs.some(dir => resolved.startsWith(dir))
+  if (!isAllowed) return null
+
+  try {
+    const content = await readFile(resolved, 'utf-8')
+    return content
+  } catch {
+    return null
+  }
 }

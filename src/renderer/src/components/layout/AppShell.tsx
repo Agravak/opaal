@@ -8,11 +8,14 @@ import { PromptPanel } from '../sidebar/PromptPanel'
 import { AgentConfigPopup } from '../popup/AgentConfigPopup'
 import { SettingsPopup } from '../popup/SettingsPopup'
 import { PromptModal } from '../popup/PromptModal'
+import { ExecutionModal } from '../popup/ExecutionModal'
+import { SkillViewer } from '../popup/SkillViewer'
 import { AgentManagerPopup } from '../popup/AgentManagerPopup'
 import { ConnectionConfigPopup } from '../popup/ConnectionConfigPopup'
 import { ConfirmModal } from '../shared/ConfirmModal'
 import { CommandBar } from './CommandBar'
 import { HomeScreen } from '../home/HomeScreen'
+import { SkillWorkshop } from '../workshop/SkillWorkshop'
 import { useUIStore } from '../../stores/ui-store'
 import { useWorkflowStore } from '../../stores/workflow-store'
 
@@ -71,6 +74,10 @@ export function AppShell() {
           <motion.div key="home" className="min-h-0 overflow-hidden" {...viewTransition}>
             <HomeScreen />
           </motion.div>
+        ) : view === 'workshop' ? (
+          <motion.div key="workshop" className="min-h-0 overflow-hidden" {...viewTransition}>
+            <SkillWorkshop />
+          </motion.div>
         ) : (
           <motion.div key="canvas" className="relative grid grid-rows-[1fr] grid-cols-[1fr] min-h-0 overflow-hidden" {...viewTransition}>
             <div
@@ -98,6 +105,8 @@ export function AppShell() {
       <ConnectionConfigPopup />
       <SettingsPopup />
       <PromptModal />
+      <ExecutionModal />
+      <SkillViewer />
       <AgentManagerPopup />
 
       {/* Confirm Modal for unsaved changes */}

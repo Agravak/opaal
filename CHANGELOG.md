@@ -5,6 +5,30 @@ All notable changes to Opaal will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-02-19
+
+### Added
+
+- Skill Workshop — dedicated view for creating, editing, validating, and managing Claude Code skills
+- Skill Viewer — immersive read-only modal for browsing skill documentation
+- Smart skill templates — 5 category templates (Development, Documentation, Creative, Engineering, Utility) with structured SKILL.md scaffolding
+- Real-time skill validation — name format, description rules, frontmatter checks
+- Skill CRUD operations — create, save, duplicate, delete skills in `~/.claude/skills/`
+- Execution Modal — run workflows directly via Claude SDK integration
+- Claude SDK integration for workflow execution
+- Workshop navigation via title bar wrench button and home screen card
+- Context-aware Ctrl+S — saves skill in workshop view, workflow on canvas
+
+### Changed
+
+- AppView system extended to support 3 views: home, canvas, workshop
+- Keyboard shortcuts now context-aware based on active view
+
+### Fixed
+
+- Security: path validation on all skill write operations (restricted to `~/.claude/skills/`)
+- Read-only protection for package-managed skills in `~/.claude/settings/skills/`
+
 ## [1.0.0] - 2026-02-16
 
 ### Added

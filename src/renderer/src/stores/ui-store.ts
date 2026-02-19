@@ -9,7 +9,7 @@ interface ContextMenu {
 }
 
 export type CanvasMode = 'select' | 'pan' | 'place'
-export type AppView = 'home' | 'canvas'
+export type AppView = 'home' | 'canvas' | 'workshop'
 
 interface ConfirmModalState {
   open: boolean
@@ -46,14 +46,24 @@ interface UIState {
   // Prompt modal
   promptModalOpen: boolean
 
+  // Execution modal
+  executionModalOpen: boolean
+
   // Agent manager popup
   agentManagerOpen: boolean
 
   // Command bar expanded view
   commandBarExpanded: boolean
 
+  // Claude integration settings
+  claudeIntegrationEnabled: boolean
+  claudeApiKey: string
+
   // Confirm modal
   confirmModal: ConfirmModalState
+
+  // Skill viewer
+  skillViewerSkill: { name: string; path: string } | null
 
   // Backward compat: derived single selection
   readonly selectedNodeId: string | null
@@ -90,6 +100,10 @@ interface UIState {
   openPromptModal: () => void
   closePromptModal: () => void
 
+  // Execution modal
+  openExecutionModal: () => void
+  closeExecutionModal: () => void
+
   // Agent manager popup
   openAgentManager: () => void
   closeAgentManager: () => void
@@ -119,6 +133,14 @@ interface UIState {
   // Confirm modal
   openConfirmModal: (action: ConfirmModalState['action'], onProceed?: () => void) => void
   closeConfirmModal: () => void
+
+  // Skill viewer
+  openSkillViewer: (name: string, path: string) => void
+  closeSkillViewer: () => void
+
+  // Claude integration settings
+  setClaudeIntegrationEnabled: (enabled: boolean) => void
+  setClaudeApiKey: (key: string) => void
 }
 
 const getInitialCommandBarExpanded = (): boolean => {
@@ -134,6 +156,20 @@ const getInitialTheme = (): 'light' | 'dark' => {
     if (stored === 'light' || stored === 'dark') return stored
   }
   return 'dark'
+}
+
+const getInitialClaudeEnabled = (): boolean => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('opaal-claude-enabled') === 'true'
+  }
+  return false
+}
+
+const getInitialClaudeApiKey = (): string => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('opaal-claude-api-key') || ''
+  }
+  return ''
 }
 
 export const useUIStore = create<UIState>()((set, get) => ({
@@ -158,9 +194,13 @@ export const useUIStore = create<UIState>()((set, get) => ({
   configPopupConnectionId: null,
   settingsOpen: false,
   promptModalOpen: false,
+  executionModalOpen: false,
   agentManagerOpen: false,
   commandBarExpanded: getInitialCommandBarExpanded(),
+  claudeIntegrationEnabled: getInitialClaudeEnabled(),
+  claudeApiKey: getInitialClaudeApiKey(),
   confirmModal: { open: false, action: null } as ConfirmModalState,
+  skillViewerSkill: null,
 
   // Backward compat getter
   get selectedNodeId(): string | null {
@@ -269,6 +309,10 @@ export const useUIStore = create<UIState>()((set, get) => ({
   openPromptModal: () => set({ promptModalOpen: true }),
   closePromptModal: () => set({ promptModalOpen: false }),
 
+  // Execution modal
+  openExecutionModal: () => set({ executionModalOpen: true }),
+  closeExecutionModal: () => set({ executionModalOpen: false }),
+
   // Agent manager popup
   openAgentManager: () => set({ agentManagerOpen: true }),
   closeAgentManager: () => set({ agentManagerOpen: false }),
@@ -347,4 +391,21 @@ export const useUIStore = create<UIState>()((set, get) => ({
 
   closeConfirmModal: () =>
     set({ confirmModal: { open: false, action: null, onProceed: undefined } }),
+
+  // Skill viewer
+  openSkillViewer: (name, path) => set({ skillViewerSkill: { name, path } }),
+  closeSkillViewer: () => set({ skillViewerSkill: null }),
+
+  // Claude integration settings
+  setClaudeIntegrationEnabled: (enabled) =>
+    set(() => {
+      localStorage.setItem('opaal-claude-enabled', String(enabled))
+      return { claudeIntegrationEnabled: enabled }
+    }),
+
+  setClaudeApiKey: (key) =>
+    set(() => {
+      localStorage.setItem('opaal-claude-api-key', key)
+      return { claudeApiKey: key }
+    }),
 }))

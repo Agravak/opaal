@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { motion, AnimatePresence, Reorder } from 'framer-motion'
+import { motion, Reorder } from 'framer-motion'
 import { useUIStore } from '../../stores/ui-store'
 import { useWorkflowStore } from '../../stores/workflow-store'
 import { useCustomAgentsStore, getUnifiedAllAgents } from '../../stores/custom-agents-store'
@@ -14,7 +14,7 @@ import { DestructiveConfirmModal } from '../shared/DestructiveConfirmModal'
 const EASE = [0.25, 0.46, 0.45, 0.94] as const
 const DISPLAY_ROLES = ALL_AGENT_ROLES.filter((r) => r !== 'custom')
 
-type SettingsTab = 'workflow' | 'agents'
+type SettingsTab = 'workflow' | 'agents' | 'claude'
 
 export function SettingsPopup() {
   const settingsOpen = useUIStore((s) => s.settingsOpen)
@@ -29,36 +29,41 @@ export function SettingsPopup() {
   const commandBarExpanded = useUIStore((s) => s.commandBarExpanded)
   const toggleCommandBarExpanded = useUIStore((s) => s.toggleCommandBarExpanded)
 
+  const claudeIntegrationEnabled = useUIStore((s) => s.claudeIntegrationEnabled)
+  const setClaudeIntegrationEnabled = useUIStore((s) => s.setClaudeIntegrationEnabled)
+  const claudeApiKey = useUIStore((s) => s.claudeApiKey)
+  const setClaudeApiKey = useUIStore((s) => s.setClaudeApiKey)
+
   return (
-    <AnimatePresence>
-      {settingsOpen && (
-        <>
-          {/* Backdrop — no click-to-close, flexbox centering to avoid blur */}
-          <motion.div
-            key="settings-backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-black/25 backdrop-blur-[6px] flex items-center justify-center"
-          >
-            {/* Panel */}
-            <motion.div
-              key="settings-panel"
-              initial={{ opacity: 0, scale: 0.96, y: 12 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.98, y: 6 }}
-              transition={{
-                type: 'spring',
-                stiffness: 380,
-                damping: 28,
-                mass: 0.8
-              }}
-              className="w-[540px] max-h-[85vh] rounded-2xl
-                bg-surface-elevated border border-border-subtle shadow-elevated
-                overflow-hidden flex flex-col"
-              onClick={(e) => e.stopPropagation()}
-            >
+    <>
+      {/* Backdrop — always in DOM, controlled by animate + pointer-events */}
+      <motion.div
+        initial={false}
+        animate={{ opacity: settingsOpen ? 1 : 0 }}
+        transition={{ duration: 0.2 }}
+        style={{ pointerEvents: settingsOpen ? 'auto' : 'none' }}
+        className="fixed inset-0 z-40 bg-black/25 backdrop-blur-[6px]"
+        onClick={toggleSettings}
+      />
+
+      {/* Panel — always in DOM, controlled by animate + pointer-events */}
+      <motion.div
+        initial={false}
+        animate={settingsOpen
+          ? { opacity: 1, scale: 1, y: 0 }
+          : { opacity: 0, scale: 0.98, y: 6 }
+        }
+        transition={settingsOpen
+          ? { type: 'spring', stiffness: 380, damping: 28, mass: 0.8 }
+          : { duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }
+        }
+        style={{ pointerEvents: settingsOpen ? 'auto' : 'none' }}
+        className="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+          w-[540px] max-h-[85vh] rounded-2xl
+          bg-surface-elevated border border-border-subtle shadow-elevated
+          overflow-hidden flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
               {/* ── Header ── */}
               <div className="relative px-6 pt-5 pb-4 shrink-0">
                 {/* Accent bar */}
@@ -130,42 +135,46 @@ export function SettingsPopup() {
                     </svg>
                   }
                 />
+                <TabButton
+                  active={activeTab === 'claude'}
+                  onClick={() => setActiveTab('claude')}
+                  label="Claude"
+                  icon={
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="4 17 10 11 4 5" />
+                      <line x1="12" y1="19" x2="20" y2="19" />
+                    </svg>
+                  }
+                />
               </div>
 
               {/* ── Tab Content ── */}
               <div className="flex-1 overflow-y-auto min-h-0">
-                <AnimatePresence mode="wait">
-                  {activeTab === 'workflow' ? (
-                    <motion.div
-                      key="workflow-tab"
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -8 }}
-                      transition={{ duration: 0.15, ease: EASE }}
-                      className="px-6 py-5 space-y-5"
-                    >
-                      <WorkflowTabContent
-                        workflow={workflow}
-                        updateSettings={updateSettings}
-                        setWorkflowName={setWorkflowName}
-                        setWorkflowDescription={setWorkflowDescription}
-                        commandBarExpanded={commandBarExpanded}
-                        toggleCommandBarExpanded={toggleCommandBarExpanded}
-                      />
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="agents-tab"
-                      initial={{ opacity: 0, x: 8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 8 }}
-                      transition={{ duration: 0.15, ease: EASE }}
-                      className="py-3"
-                    >
-                      <AgentsTabContent />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {activeTab === 'workflow' ? (
+                  <div className="px-6 py-5 space-y-5">
+                    <WorkflowTabContent
+                      workflow={workflow}
+                      updateSettings={updateSettings}
+                      setWorkflowName={setWorkflowName}
+                      setWorkflowDescription={setWorkflowDescription}
+                      commandBarExpanded={commandBarExpanded}
+                      toggleCommandBarExpanded={toggleCommandBarExpanded}
+                    />
+                  </div>
+                ) : activeTab === 'agents' ? (
+                  <div className="py-3">
+                    <AgentsTabContent />
+                  </div>
+                ) : (
+                  <div className="px-6 py-5 space-y-5">
+                    <ClaudeTabContent
+                      enabled={claudeIntegrationEnabled}
+                      setEnabled={setClaudeIntegrationEnabled}
+                      apiKey={claudeApiKey}
+                      setApiKey={setClaudeApiKey}
+                    />
+                  </div>
+                )}
               </div>
 
               {/* ── Footer ── */}
@@ -181,10 +190,7 @@ export function SettingsPopup() {
                 </motion.button>
               </div>
             </motion.div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+    </>
   )
 }
 
@@ -824,6 +830,102 @@ function AgentTemplateCard({
         </motion.button>
       </div>
     </div>
+  )
+}
+
+/* ══════════════════════════════════════════════════════
+   CLAUDE TAB
+   ══════════════════════════════════════════════════════ */
+
+function ClaudeTabContent({
+  enabled,
+  setEnabled,
+  apiKey,
+  setApiKey,
+}: {
+  enabled: boolean
+  setEnabled: (v: boolean) => void
+  apiKey: string
+  setApiKey: (v: string) => void
+}) {
+  const [showKey, setShowKey] = useState(false)
+
+  return (
+    <>
+      <SettingsField label="Claude Integration" index={0}>
+        <ToggleRow
+          label="Enable Claude Integration"
+          description="Show 'Launch in Claude Code' and 'Run Workflow' buttons throughout the app"
+          checked={enabled}
+          onChange={setEnabled}
+          accent
+        />
+      </SettingsField>
+
+      {enabled && (
+        <SettingsField label="API Key" index={1}>
+          <div className="space-y-2">
+            <p className="text-[10.5px] text-content-tertiary leading-relaxed">
+              Enter your Anthropic API key for the Run Workflow feature.
+              Stored locally on your machine.
+            </p>
+            <div className="relative">
+              <input
+                type={showKey ? 'text' : 'password'}
+                value={apiKey}
+                onChange={(e) => setApiKey(e.target.value)}
+                className="w-full px-3 py-2 pr-10 rounded-button bg-surface-tertiary border border-border-subtle
+                  text-[12px] text-content-primary placeholder:text-content-tertiary
+                  focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30
+                  focus:shadow-[0_0_0_3px_var(--color-accent-glow)] transition-all font-mono"
+                placeholder="sk-ant-..."
+              />
+              <button
+                onClick={() => setShowKey(!showKey)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded
+                  text-content-tertiary hover:text-content-secondary transition-colors"
+                title={showKey ? 'Hide key' : 'Show key'}
+              >
+                {showKey ? (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+                    <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+                    <line x1="1" y1="1" x2="23" y2="23" />
+                  </svg>
+                ) : (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                )}
+              </button>
+            </div>
+            <p className="text-[10px] text-content-tertiary/70">
+              Falls back to <code className="px-1 py-0.5 rounded bg-surface-tertiary text-[9px] font-mono">ANTHROPIC_API_KEY</code> environment variable if set.
+            </p>
+          </div>
+        </SettingsField>
+      )}
+
+      <SettingsField label="About" index={enabled ? 2 : 1}>
+        <div className="space-y-2">
+          <p className="text-[11px] text-content-secondary leading-relaxed">
+            When enabled, Opaal can launch Claude Code CLI with your generated
+            prompts or run workflows directly using the Claude Agent SDK.
+          </p>
+          <div className="space-y-1">
+            <p className="text-[10px] text-content-tertiary leading-relaxed">
+              <span className="font-medium text-content-secondary">Launch in Claude Code</span> — requires the CLI installed via{' '}
+              <code className="px-1 py-0.5 rounded bg-surface-tertiary text-[9px] font-mono">npm i -g @anthropic-ai/claude-code</code>
+            </p>
+            <p className="text-[10px] text-content-tertiary leading-relaxed">
+              <span className="font-medium text-content-secondary">Run Workflow</span> — requires an API key (above) or the{' '}
+              <code className="px-1 py-0.5 rounded bg-surface-tertiary text-[9px] font-mono">ANTHROPIC_API_KEY</code> env variable
+            </p>
+          </div>
+        </div>
+      </SettingsField>
+    </>
   )
 }
 

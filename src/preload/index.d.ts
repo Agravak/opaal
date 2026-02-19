@@ -31,9 +31,56 @@ interface CustomAgentTemplateData {
   updatedAt: string
 }
 
+interface ClaudeCliInfo {
+  found: boolean
+  path: string | null
+  version: string | null
+}
+
+interface ClaudeLaunchOptions {
+  cwd?: string
+  mode?: 'interactive' | 'print'
+}
+
+interface ClaudeLaunchResult {
+  success: boolean
+  pid?: number
+  error?: string
+}
+
+interface ClaudeSdkAvailability {
+  available: boolean
+  hasApiKey: boolean
+  error?: string
+}
+
+interface ClaudeRunOptions {
+  cwd?: string
+  model?: string
+  permissionMode?: 'default' | 'acceptEdits' | 'plan'
+  maxTurns?: number
+}
+
+interface ClaudeRunResult {
+  success: boolean
+  sessionId?: string
+  error?: string
+}
+
+interface SkillValidationResult {
+  valid: boolean
+  errors: { rule: string; message: string }[]
+  warnings: { rule: string; message: string }[]
+}
+
 interface ElectronAPI {
   // Skills
   scanSkills: () => Promise<DetectedSkill[]>
+  readSkillContent: (skillPath: string) => Promise<string | null>
+  writeSkillContent: (skillPath: string, content: string) => Promise<{ success: boolean; error?: string }>
+  createSkillDirectory: (skillName: string) => Promise<{ success: boolean; path?: string; error?: string }>
+  deleteSkill: (skillPath: string) => Promise<{ success: boolean; error?: string }>
+  validateSkillContent: (content: string) => Promise<SkillValidationResult>
 
   // File operations
   saveWorkflow: (data: string, currentPath?: string) => Promise<string | null>
@@ -74,6 +121,22 @@ interface ElectronAPI {
   getUnifiedOrder: () => Promise<string[]>
   setUnifiedOrder: (order: string[]) => Promise<void>
   clearUnifiedOrder: () => Promise<void>
+
+  // Claude Code integration
+  detectClaudeCli: () => Promise<ClaudeCliInfo>
+  launchClaudeCode: (prompt: string, options?: ClaudeLaunchOptions) => Promise<ClaudeLaunchResult>
+
+  // Claude settings
+  setClaudeApiKey: (key: string) => Promise<void>
+
+  // Claude Agent SDK execution
+  checkClaudeSdk: () => Promise<ClaudeSdkAvailability>
+  runClaudeWorkflow: (prompt: string, options?: ClaudeRunOptions) => Promise<ClaudeRunResult>
+  stopClaudeWorkflow: () => Promise<boolean>
+  onClaudeMessage: (callback: (event: unknown, data: Record<string, unknown>) => void) => () => void
+  onClaudeComplete: (callback: (event: unknown, data: Record<string, unknown>) => void) => () => void
+  onClaudeError: (callback: (event: unknown, data: Record<string, unknown>) => void) => () => void
+  onClaudeStopped: (callback: (event: unknown, data: Record<string, unknown>) => void) => () => void
 
   // App lifecycle
   onBeforeClose: (callback: () => void) => () => void

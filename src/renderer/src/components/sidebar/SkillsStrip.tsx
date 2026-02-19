@@ -9,7 +9,7 @@ import { Tooltip } from '../shared/Tooltip'
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const
 
-type SkillItem = { id: string; name: string; description: string }
+type SkillItem = { id: string; name: string; description: string; path: string }
 
 function formatLastScanned(timestamp: string | null): string | null {
   if (!timestamp) return null
@@ -25,6 +25,7 @@ export function SkillsStrip() {
   const skillsPanelCollapsed = useUIStore((s) => s.skillsPanelCollapsed)
   const toggleSkillsPanel = useUIStore((s) => s.toggleSkillsPanel)
   const addSkillToAgent = useWorkflowStore((s) => s.addSkillToAgent)
+  const openSkillViewer = useUIStore((s) => s.openSkillViewer)
   const [justAdded, setJustAdded] = useState<string | null>(null)
 
   useEffect(() => {
@@ -58,6 +59,12 @@ export function SkillsStrip() {
     setJustAdded(skill.id)
     setTimeout(() => setJustAdded(null), 600)
   }, [selectedNodeId, selectedNodeIds, addSkillToAgent])
+
+  const handleSkillDoubleClick = useCallback((skill: SkillItem) => {
+    if (skill.path) {
+      openSkillViewer(skill.name, skill.path)
+    }
+  }, [openSkillViewer])
 
   const handleDragStart = useCallback((e: React.DragEvent, skill: SkillItem) => {
     e.dataTransfer.setData('application/opaal-skill', JSON.stringify(skill))
@@ -160,8 +167,8 @@ export function SkillsStrip() {
         )}
         <p className="text-[10px] text-content-tertiary mt-2 leading-snug">
           {hasSelection
-            ? `Click to equip on ${selectedCount} selected ${selectedCount === 1 ? 'agent' : 'agents'}, or drag to any card.`
-            : 'Drag to any agent card, or select agent(s) to click-equip.'}
+            ? `Click to equip on ${selectedCount} selected ${selectedCount === 1 ? 'agent' : 'agents'}, or drag to any card. Double-click to view docs.`
+            : 'Drag to any agent card, or select agent(s) to click-equip. Double-click any skill to view docs.'}
         </p>
       </div>
 
@@ -195,6 +202,7 @@ export function SkillsStrip() {
                   isJustAdded={justAdded === skill.id}
                   onDragStart={handleDragStart}
                   onClick={handleSkillClick}
+                  onDoubleClick={handleSkillDoubleClick}
                 />
               ))}
             </motion.section>
@@ -220,7 +228,8 @@ function SkillRow({
   hasSelection,
   isJustAdded,
   onDragStart,
-  onClick
+  onClick,
+  onDoubleClick
 }: {
   skill: SkillItem
   category: string
@@ -230,6 +239,7 @@ function SkillRow({
   isJustAdded: boolean
   onDragStart: (e: React.DragEvent, skill: SkillItem) => void
   onClick: (skill: SkillItem) => void
+  onDoubleClick: (skill: SkillItem) => void
 }) {
   const [hovered, setHovered] = useState(false)
   const skillAccent = getSkillAccentColor(skill.name)
@@ -241,6 +251,7 @@ function SkillRow({
         draggable
         onDragStart={(e) => onDragStart(e as unknown as React.DragEvent, skill)}
         onClick={() => onClick(skill)}
+        onDoubleClick={() => onDoubleClick(skill)}
         onHoverStart={() => setHovered(true)}
         onHoverEnd={() => setHovered(false)}
         initial={{ opacity: 0, y: 4 }}
