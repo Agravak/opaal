@@ -17,14 +17,11 @@ files:
 win:
   forceCodeSigning: false
   target:
-    - target: nsis
+    - target: portable
       arch: [x64]
 
-nsis:
-  oneClick: true
-  perMachine: false
-  allowToChangeInstallationDirectory: false
-  deleteAppDataOnUninstall: false
+portable:
+  unpackDirName: Opaal
 
 mac:
   target:
