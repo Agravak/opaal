@@ -40,11 +40,11 @@ Download the latest release for your platform:
 
 | Platform | Download |
 |----------|----------|
-| Windows | [Opaal.exe](https://github.com/Agravak/opaal/releases/latest) |
+| Windows | [Opaal Setup.exe](https://github.com/Agravak/opaal/releases/latest) |
 | macOS | [Opaal.dmg](https://github.com/Agravak/opaal/releases/latest) |
 | Linux | [Opaal.AppImage](https://github.com/Agravak/opaal/releases/latest) |
 
-> **Windows users:** Opaal is a portable app — no installation needed. Just download and run the `.exe` directly. Windows SmartScreen may show a warning since the app is not code-signed; click "More info" then "Run anyway" to proceed.
+> **Windows users:** Download and run the Setup `.exe` installer. Windows SmartScreen may show a warning since the app is not code-signed; click "More info" then "Run anyway" to proceed.
 
 Or [view all releases](https://github.com/Agravak/opaal/releases).
 

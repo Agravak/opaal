@@ -17,8 +17,14 @@ files:
 win:
   forceCodeSigning: false
   target:
-    - target: portable
+    - target: nsis
       arch: [x64]
+
+nsis:
+  oneClick: true
+  perMachine: false
+  allowToChangeInstallationDirectory: false
+  deleteAppDataOnUninstall: false
 
 mac:
   target:
