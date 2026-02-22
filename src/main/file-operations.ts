@@ -43,6 +43,17 @@ export async function loadWorkflowDialog(
   return { data, filePath }
 }
 
+export async function loadWorkflowByPath(
+  filePath: string
+): Promise<{ data: string; filePath: string } | null> {
+  try {
+    const data = await readFile(filePath, 'utf-8')
+    return { data, filePath }
+  } catch {
+    return null
+  }
+}
+
 export async function exportPromptDialog(
   win: BrowserWindow,
   promptText: string

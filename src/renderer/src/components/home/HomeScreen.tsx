@@ -21,6 +21,7 @@ export function HomeScreen() {
   const draft = usePersistenceStore((s) => s.draft)
   const draftChecked = usePersistenceStore((s) => s.draftChecked)
   const loadRecentFiles = usePersistenceStore((s) => s.loadRecentFiles)
+  const addRecentFile = usePersistenceStore((s) => s.addRecentFile)
   const removeRecentFile = usePersistenceStore((s) => s.removeRecentFile)
   const clearRecentFiles = usePersistenceStore((s) => s.clearRecentFiles)
   const checkForDraft = usePersistenceStore((s) => s.checkForDraft)
@@ -56,22 +57,47 @@ export function HomeScreen() {
   }, [loadWorkflow, setView])
 
   const handleLoadRecentFile = useCallback(async (filePath: string) => {
-    if (!window.api?.loadWorkflow) return
-    // We need to read the file via the main process
-    // For now, try loading it through the standard dialog approach
-    // Actually we need a direct file read IPC. Let's use the loadWorkflow dialog workaround
-    // by dispatching the standard load event
-    // Better: just open the file dialog with the path
-    // Actually the simplest: read the file via fetch if it's a local file, or add a new IPC
-    // For now we'll use the existing load mechanism with a toast
+    if (!window.api?.loadWorkflowByPath) return
     try {
-      // We don't have a direct "load file by path" IPC yet
-      // Let's trigger the standard file dialog for now
-      window.dispatchEvent(new CustomEvent('opaal:load'))
+      const result = await window.api.loadWorkflowByPath(filePath)
+      if (!result) {
+        removeRecentFile(filePath)
+        addToast({
+          variant: 'error',
+          message: 'File not found',
+          detail: 'This file may have been moved or deleted',
+        })
+        return
+      }
+
+      const parsed = JSON.parse(result.data) as Workflow
+      loadWorkflow(parsed, result.filePath)
+      setView('canvas')
+      if (window.api.clearDraft) window.api.clearDraft()
+
+      const roleColors = [...new Set(parsed.agents.map(a => a.role))].slice(0, 5)
+      addRecentFile({
+        filePath: result.filePath,
+        name: parsed.name,
+        agentCount: parsed.agents.length,
+        waveCount: parsed.columns.length,
+        roleColors,
+        lastOpened: new Date().toISOString(),
+      })
+
+      addToast({
+        variant: 'success',
+        message: 'Workflow loaded',
+        detail: result.filePath.replace(/^.*[\\/]/, ''),
+      })
     } catch {
-      addToast({ variant: 'error', message: 'Failed to open file' })
+      addToast({
+        variant: 'error',
+        message: 'Failed to load workflow',
+        detail: 'The file contains invalid data',
+      })
     }
-  }, [addToast])
+  }, [loadWorkflow, setView, addRecentFile, removeRecentFile, addToast])
 
   const handleRecoverDraft = useCallback(() => {
     if (!draft) return

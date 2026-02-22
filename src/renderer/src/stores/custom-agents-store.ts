@@ -311,6 +311,13 @@ export const useCustomAgentsStore = create<CustomAgentsState>()((set, get) => ({
   },
 
   setUnifiedOrder: async (order) => {
+    const current = get().unifiedOrder
+    if (
+      current.length === order.length &&
+      current.every((v, i) => v === order[i])
+    ) {
+      return
+    }
     set({ unifiedOrder: order })
     try {
       await window.api?.setUnifiedOrder?.(order)

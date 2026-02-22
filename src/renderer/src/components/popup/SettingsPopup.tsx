@@ -458,8 +458,10 @@ function AgentsTabContent() {
   const workflow = useWorkflowStore((s) => s.workflow)
 
   const [deleteTarget, setDeleteTarget] = useState<CustomAgentTemplate | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const reorderTimeoutRef = useRef<ReturnType<typeof setTimeout>>()
+  const isDeletingRef = useRef(false)
 
   // Build unified agent list
   const unifiedItems = useMemo(
@@ -475,6 +477,7 @@ function AgentsTabContent() {
 
   const handleUnifiedReorder = useCallback(
     (newKeys: string[]) => {
+      if (isDeletingRef.current) return
       setUnifiedOrder(newKeys)
 
       if (reorderTimeoutRef.current) clearTimeout(reorderTimeoutRef.current)
@@ -537,9 +540,15 @@ function AgentsTabContent() {
 
   const handleConfirmDelete = useCallback(async () => {
     if (!deleteTarget) return
+    isDeletingRef.current = true
+    setIsDeleting(true)
     await removeTemplate(deleteTarget.id)
     useToastStore.getState().addToast({ variant: 'info', message: `Deleted "${deleteTarget.name}"` })
     setDeleteTarget(null)
+    setIsDeleting(false)
+    requestAnimationFrame(() => {
+      isDeletingRef.current = false
+    })
   }, [deleteTarget, removeTemplate])
 
   const visibleDefaultCount = DISPLAY_ROLES.length - hiddenDefaultRoles.filter((r) => r !== 'custom').length
@@ -624,6 +633,7 @@ function AgentsTabContent() {
         cancelLabel="Cancel"
         onConfirm={handleConfirmDelete}
         onCancel={() => setDeleteTarget(null)}
+        loading={isDeleting}
       />
     </>
   )

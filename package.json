@@ -1,6 +1,6 @@
 {
   "name": "opaal",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Opaal — Orchestration Prompts for Agentic AI Launch. Visual multi-agent workflow designer for Claude Code and other agentic AI platforms.",
   "main": "./out/main/index.js",
   "author": {

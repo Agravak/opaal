@@ -16,7 +16,11 @@ export function AgentPalette() {
   const paletteCollapsed = useUIStore((s) => s.paletteCollapsed)
   const togglePalette = useUIStore((s) => s.togglePalette)
   const openAgentManager = useUIStore((s) => s.openAgentManager)
-  const { templates, loaded, loadCustomAgents, hiddenDefaultRoles, unifiedOrder } = useCustomAgentsStore()
+  const templates = useCustomAgentsStore((s) => s.templates)
+  const loaded = useCustomAgentsStore((s) => s.loaded)
+  const loadCustomAgents = useCustomAgentsStore((s) => s.loadCustomAgents)
+  const hiddenDefaultRoles = useCustomAgentsStore((s) => s.hiddenDefaultRoles)
+  const unifiedOrder = useCustomAgentsStore((s) => s.unifiedOrder)
 
   useEffect(() => {
     if (!loaded) {

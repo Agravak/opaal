@@ -2,6 +2,10 @@ import { app, shell, BrowserWindow } from 'electron'
 import { join } from 'path'
 import { registerIpcHandlers, setMainWindow } from './ipc-handlers'
 
+// Debug: log what electron module resolved to
+console.log('[OPAAL DEBUG] process.type:', process.type)
+console.log('[OPAAL DEBUG] process.versions.electron:', process.versions.electron)
+
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
     width: 1440,
@@ -29,6 +33,9 @@ function createWindow(): void {
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
+    if (!app.isPackaged) {
+      mainWindow.webContents.openDevTools()
+    }
   })
 
   // Window close guard: let renderer decide if close is ok when dirty

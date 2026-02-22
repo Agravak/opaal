@@ -17,6 +17,8 @@ const api = {
   saveWorkflow: (data: string, currentPath?: string) =>
     ipcRenderer.invoke('file:save', data, currentPath),
   loadWorkflow: () => ipcRenderer.invoke('file:load'),
+  loadWorkflowByPath: (filePath: string) =>
+    ipcRenderer.invoke('file:load-path', filePath),
   exportPrompt: (promptText: string) =>
     ipcRenderer.invoke('file:export-prompt', promptText),
 

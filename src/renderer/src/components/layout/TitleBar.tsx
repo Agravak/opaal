@@ -49,6 +49,10 @@ export function TitleBar() {
     window.dispatchEvent(new CustomEvent('opaal:save'))
   }, [])
 
+  const handleSaveAs = useCallback(() => {
+    window.dispatchEvent(new CustomEvent('opaal:save-as'))
+  }, [])
+
   const handleStartEdit = useCallback(() => {
     if (view !== 'canvas') return
     setEditValue(workflowName)
@@ -127,6 +131,22 @@ export function TitleBar() {
             <path d="M3 2.5h8l2 2V13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-10a.5.5 0 0 1 .5-.5z" />
             <path d="M5 2.5v3h5v-3" />
             <path d="M5.5 10h5" />
+          </svg>
+        </button>
+
+        {/* Save As button */}
+        <button
+          onClick={handleSaveAs}
+          className="w-7 h-7 rounded-[7px] flex items-center justify-center transition-all duration-150
+            text-content-tertiary hover:text-content-primary hover:bg-surface-tertiary/80"
+          title="Save As (Ctrl+Shift+S)"
+          aria-label="Save workflow as new file"
+        >
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 2.5h8l2 2V13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-10a.5.5 0 0 1 .5-.5z" />
+            <path d="M5 2.5v3h5v-3" />
+            <path d="M6.5 11l1.5 1.5 1.5-1.5" />
+            <path d="M8 12.5V9" />
           </svg>
         </button>
       </div>

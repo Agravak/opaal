@@ -8,6 +8,7 @@ interface DestructiveConfirmModalProps {
   cancelLabel: string
   onConfirm: () => void
   onCancel: () => void
+  loading?: boolean
 }
 
 export function DestructiveConfirmModal({
@@ -18,6 +19,7 @@ export function DestructiveConfirmModal({
   cancelLabel,
   onConfirm,
   onCancel,
+  loading,
 }: DestructiveConfirmModalProps) {
   return (
     <AnimatePresence>
@@ -61,15 +63,25 @@ export function DestructiveConfirmModal({
             <div className="flex items-center justify-end gap-2 px-5 py-4 border-t border-border-subtle">
               <button
                 onClick={onCancel}
-                className="px-3 py-1.5 text-[12px] font-medium text-content-tertiary hover:text-content-secondary transition-colors rounded-[7px]"
+                disabled={loading}
+                className={`px-3 py-1.5 text-[12px] font-medium transition-colors rounded-[7px] ${
+                  loading
+                    ? 'text-content-tertiary/50 cursor-not-allowed'
+                    : 'text-content-tertiary hover:text-content-secondary'
+                }`}
               >
                 {cancelLabel}
               </button>
               <button
                 onClick={onConfirm}
-                className="px-3.5 py-1.5 text-[12px] font-semibold text-white bg-red-500 hover:bg-red-600 rounded-[7px] transition-all"
+                disabled={loading}
+                className={`px-3.5 py-1.5 text-[12px] font-semibold text-white rounded-[7px] transition-all ${
+                  loading
+                    ? 'bg-red-500/50 cursor-not-allowed'
+                    : 'bg-red-500 hover:bg-red-600'
+                }`}
               >
-                {confirmLabel}
+                {loading ? 'Deleting...' : confirmLabel}
               </button>
             </div>
           </motion.div>

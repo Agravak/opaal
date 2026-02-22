@@ -8,7 +8,7 @@ export default defineConfig({
     plugins: [externalizeDepsPlugin({ exclude: ['electron-store'] })],
     build: {
       rollupOptions: {
-        external: ['electron']
+        external: ['electron', '@anthropic-ai/claude-agent-sdk']
       }
     }
   },

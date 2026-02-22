@@ -85,6 +85,7 @@ interface ElectronAPI {
   // File operations
   saveWorkflow: (data: string, currentPath?: string) => Promise<string | null>
   loadWorkflow: () => Promise<{ data: string; filePath: string } | null>
+  loadWorkflowByPath: (filePath: string) => Promise<{ data: string; filePath: string } | null>
   exportPrompt: (promptText: string) => Promise<string | null>
 
   // Persistence: Recent files

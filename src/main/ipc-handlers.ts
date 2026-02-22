@@ -1,7 +1,7 @@
 import { ipcMain, BrowserWindow } from 'electron'
 import { scanSkills, readSkillContent } from './skills-scanner'
 import { writeSkillContent, createSkillDirectory, deleteSkillDirectory, validateSkillContent } from './skill-operations'
-import { saveWorkflowDialog, loadWorkflowDialog, exportPromptDialog } from './file-operations'
+import { saveWorkflowDialog, loadWorkflowDialog, loadWorkflowByPath, exportPromptDialog } from './file-operations'
 import { detectClaudeCli, launchClaudeCode, type LaunchOptions } from './claude-integration'
 import { checkSdkAvailability, runWorkflow, stopWorkflow, type RunOptions } from './claude-sdk-runner'
 import {
@@ -88,6 +88,10 @@ export function registerIpcHandlers(): void {
     const win = BrowserWindow.fromWebContents(event.sender)
     if (!win) return null
     return await loadWorkflowDialog(win)
+  })
+
+  ipcMain.handle('file:load-path', async (_event, filePath: string) => {
+    return await loadWorkflowByPath(filePath)
   })
 
   ipcMain.handle('file:export-prompt', async (event, promptText: string) => {
